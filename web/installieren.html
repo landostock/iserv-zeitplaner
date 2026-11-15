@@ -17,8 +17,10 @@
   <section id="deploy" hidden>
    <ol class="deployment-stages" aria-label="Installation bei Cloudflare"><li>GitHub verbinden</li><li>Installieren</li><li>Ergebnis prüfen</li></ol>
    <section id="connect-github">
-    <p>Öffnen Sie die Vorlage bei Cloudflare. Unter <strong>Git account → New GitHub connection</strong> verbinden Sie Ihr GitHub-Konto. Kommen Sie danach in diesen Tab zurück.</p>
+    <ol id="github-permissions"><li>Bei Cloudflare unter <strong>Git account → New GitHub connection</strong> Ihr GitHub-Konto verbinden.</li><li>Im GitHub-Fenster das eigene Konto prüfen. Für die automatische Neuanlage <strong>All repositories</strong> wählen, dann <strong>Install &amp; Authorize</strong> anklicken.</li><li>Danach in diesen Tab zurückkehren.</li></ol>
+    <p class="hint">„All repositories“ gibt Cloudflare Zugriff auf alle Repositories Ihres Kontos. Nach der Installation begrenzen Sie diesen Zugriff im Schritt „Ergebnis prüfen“.</p>
     <a id="deploy-link" class="button primary deploy-template" target="_blank" rel="noopener noreferrer">Vorlage bei Cloudflare öffnen <span aria-hidden="true">↗</span></a>
+    <details><summary>Kann ich „Only select repositories“ wählen?</summary><p>Ja, wenn Sie Cloudflare bereits Zugriff auf bestimmte bestehende Projekte geben möchten. Wählen Sie nur diese aus, keine unbeteiligten Projekte. Von der GitHub-App neu erstellte Repositories werden laut GitHub automatisch mit freigegeben. Bei einem neuen Konto ohne Repositories verwenden Sie für diesen Ablauf „All repositories“.</p></details>
     <div class="return-help"><strong>Nach der Anmeldung erscheint „Select a repository“?</strong><p>Öffnen Sie die Vorlage über diesen Link erneut. Wählen Sie dort keines Ihrer anderen Projekte aus.</p><a id="reopen-template" class="deploy-template" target="_blank" rel="noopener noreferrer">Zur Zeitplaner-Vorlage <span aria-hidden="true">↗</span></a></div>
     <button id="github-next" class="button secondary">GitHub ist verbunden – weiter</button>
    </section>
@@ -33,6 +35,7 @@
    <section id="deployment-result" hidden>
     <p>Warten Sie in Cloudflare auf die erfolgreiche Bereitstellung. Öffnen Sie anschließend die dort angezeigte <strong>workers.dev-Adresse</strong>.</p>
     <p class="hint" id="release-note"></p>
+    <div id="github-scope-review" class="return-help"><strong>GitHub-Zugriff begrenzen</strong><p>Öffnen Sie <a href="https://github.com/settings/installations" target="_blank" rel="noopener noreferrer">Ihre installierten GitHub-Apps <span aria-hidden="true">↗</span></a>. Bei <strong>Cloudflare Workers and Pages → Configure</strong> wählen Sie <strong>Only select repositories</strong>, markieren Ihre neue Zeitplaner-Kopie und klicken auf <strong>Save</strong>.</p><p>Bereits mit Cloudflare verbundene andere Projekte müssen ebenfalls ausgewählt bleiben.</p></div>
     <button id="deploy-next" class="button primary">Erfolgreich – Website öffnen</button>
     <details><summary>Cloudflare braucht noch eine Angabe</summary><p><strong>E-Mail bestätigen:</strong> den Link im Postfach öffnen und im selben Projekt fortsetzen. <strong>workers.dev-Adresse:</strong> eine Kontoadresse anlegen. <strong>Build fehlgeschlagen:</strong> die Fehlermeldung im bestehenden Projekt prüfen. Legen Sie dafür keine zweite Kopie an.</p></details>
    </section>
