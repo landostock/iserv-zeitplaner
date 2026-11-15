@@ -2,12 +2,12 @@
   "version": "1.0.0-rc1",
   "files": {
     ".dev.vars.example": "339d2d293d693bd1eea6fce724ba8574c9da460c32086f4c90689a5d5b026afc",
-    ".gitignore": "bc92e12bcd17c346023b7cf668c6b2e0959154a980ec1da60920b02e41b2d233",
+    ".gitignore": "8fbb2dac0b145e521900e887c3580f5101e6826160d62689c09e710afd4ee24a",
     ".node-version": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
-    "INSTALLATION-CHECKS.md": "542533647ccf1da0419b62f29c39298793a93b01c10aada10bc46c7d264b5c6e",
-    "README.md": "30ed138958046c7604a6c64471ce90529206a8c624d3a4908951bf25a7b29dfa",
+    "INSTALLATION-CHECKS.md": "12b86d9b84df0d61423ac7d2981f0b74140198ab02657857842dd7a09f73f5ae",
+    "README.md": "401c8f1f1fedecf6a876ea169337691c944c6b5b8ac6def53a83a7e2e2c3046b",
     "SECURITY.md": "626bb8e246cbd18b2cf5976397f596878d0670f879728624259cc4072d5a5acf",
-    "browser-tests/installer.spec.ts": "33f82098bbbdb3e1c0e595629cd779e369f25ca5947eb1f041dc7194d8d1d49b",
+    "browser-tests/installer.spec.ts": "3a56a2232618998844bdacf6c5dcbf426cad3a74450bb96ef733c2580d35ab45",
     "migrations/0001_initial.sql": "7285c6bd88e94049545cf7575fb438f90a1eb4e8693fb586a9b1316cee7e9526",
     "migrations/0002_connection_retention.sql": "0aff6680c050d61df03b75d00ddacaf5cc783792ba8fae10ade77dc2e0e50eb6",
     "migrations/0003_source_cleanup.sql": "2f8f4a95bff1689c8c00c9fdf03c17b406343772215ac1184b3e413cede5ca79",
@@ -22,7 +22,7 @@
     "package-lock.json": "5c48a99f10c643317ed62d0be61732ad3ef6ff786032ad9a6e2979500b8e0085",
     "package.json": "54464263e5faf6076e7b091534fd25c6574c5d64e79e81eaa746409aa1a6b148",
     "playwright.config.ts": "1716240858350defa14030ccf656c59071a17f21342966327d5a6ab9ba365391",
-    "scripts/verify-release.mjs": "3a233add6f588888d421122df0a7d80c7ca01977593d4fb2b8e52c4df4b65ba8",
+    "scripts/verify-release.mjs": "a1719ee2f6a10b85becf2defb565f8756402dfeb474fc0a81bc3007ab67ea446",
     "src/access-auth.ts": "4f33e9effd9a5fa1902c6ef59ef00d6329b5b9d73ef37c0c76d20a44101e2b26",
     "src/account-management.ts": "b09a08b0d558904449087a56c786a59b75d1193708c8d7c792d1d494328373ba",
     "src/account-security.ts": "b81c9693871e2aaec9333e2b0c636e62bca8d225b1e14b8b2cdff22babb5efaf",
@@ -82,7 +82,7 @@
     "src/worker.ts": "311ccc4a3d9356a1aee8769ae39610da39049459f600da43a0c8f383f5e6b14e",
     "src/write-probe-feedback.ts": "3ead7cc0c7479dc9b0592ea4725587844710a87fa5163f85eccab442cc17d0da",
     "test/passkey-fixture.ts": "f1753302bbe759110d4ebd64fbfc4d4585dcf816c14fc5eb891608de8f0a38e1",
-    "test/personal-installation.test.ts": "a158a1ff7c35304af9f35946f7ff8847d61f0c4e18af17a552b3e8ee6c3e3536",
+    "test/personal-installation.test.ts": "3b41a3e46cc22847587c14b4f8f5dfc1c6b7c299143e83de615adc70b917e594",
     "tsconfig.json": "4ab5d35db48f2214cf1fe8b9ef8ca6dbb44fc08b858dc539c6493fd31f68e99e",
     "tsconfig.web.json": "200bbb8f66ee23c47537b44dd27655285791e6ac4d7ba3cea1668d7231404c42",
     "vite.config.ts": "51f512d6b5091eb8917a2dd7594eaa2ad29d9562baba5ee86522b908ef10ddb7",
@@ -92,8 +92,8 @@
     "web/einrichten.html": "729fb34e6d19ff92f38b071252d82651673b6376c07acb6ed235ab30d3555da2",
     "web/einrichten.ts": "0361b6f3ad1f079e6ef42f849656bb53ed6137caa6845f1156399cd5b9eda204",
     "web/index.html": "3209eaaa7083cc9bc129ce6d449f1c863b5f2c2d54209eb58fdbc073da5b042c",
-    "web/installieren.html": "b11015d517cbeff379413db24301c0960cc5100ec7c9162da58cfed164e16b3d",
-    "web/installieren.ts": "dd212bd92611a03a98c3754d6efde94f6412ebef160e63dbed13299ddadb7a0e",
+    "web/installieren.html": "92df8a2ca31a397afca9cffc59e145cd905e6ae7fc818b72507b6a80164f1234",
+    "web/installieren.ts": "42dd1263688dafe8e8095653b232b0d36e1c9cdde3a58c4b74ab6be96285a63e",
     "web/polish.css": "59c89d06677ff9a5869f5daa5903077192efd15184a395b1c55d0b62b10478f1",
     "web/public/base.css": "b1ecbc1a5d103ccb7e596cbdb02eb643a3017456d00a1ac88caeb60fab674f82",
     "web/public/icon.svg": "bffcf8f2de47862b4c6792c8848b260500f35751aab491b7e84e49e14046f761",
@@ -129,6 +129,6 @@
     "web/public/ui-icons/users.svg": "71c616760fd966d96850437b52c98ada59f230a1c19f5d9f3551d19bc000eb68",
     "web/style.css": "ce32b823fa11d03cfde4b5a1b69d8b62655a075b2582562e0d9575326af387ce",
     "web/ui.ts": "ffa3a3e9ce82e5a6863a01887330cd9b7a8bed4b3e0373870c1ed3e7bf80bbc4",
-    "web/wizard.css": "1933dd1c01d0d0f6db2ea7421f0182300f5d63ac71c6b0aad5f588ce07613603"
+    "web/wizard.css": "4a54cdbb1ff0d4df7991a1763b830fbd696d086f3d4dfb9ba89c3da6c4534dba"
   }
 }

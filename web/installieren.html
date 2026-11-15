@@ -1,9 +1,50 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#234e47"><title>Eigenen IServ Zeitplaner installieren</title><link rel="icon" href="/icon.svg"><link rel="stylesheet" href="/wizard.css"><script type="module" src="/installieren.ts"></script></head>
-<body class="wizard-page"><header class="wizard-top"><a href="/installieren.html" class="brand"><img src="/icon.svg" width="36" height="36" alt="">IServ <strong>Zeitplaner</strong></a><span>Einrichtung</span></header>
-<main class="wizard-shell"><aside class="wizard-aside"><h1>Zeitplaner einrichten</h1><p>Danach können Sie Dateien zu einem festen Termin in IServ veröffentlichen.</p><ol id="steps"><li>Konten vorbereiten</li><li>Zeitplaner installieren</li><li>Website öffnen</li></ol></aside>
-<section class="wizard-panel"><div class="wizard-progress"><span id="step-count">Schritt 1 von 3</span><span>1.0.0-rc1 · Testversion</span></div><h2 id="step-title">Konten vorbereiten</h2><p id="status" role="status" hidden></p>
-<section id="prepare"><p>Melden Sie sich bei <a href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener noreferrer">Cloudflare</a> und <a href="https://github.com/signup" target="_blank" rel="noopener noreferrer">GitHub</a> an oder erstellen Sie dort jeweils ein kostenloses Konto. Cloudflare betreibt den Zeitplaner, GitHub speichert den Programmcode.</p><label class="check"><input id="accounts-ready" type="checkbox"><span>Ich bin bei beiden Anbietern angemeldet und habe meine E-Mail-Adressen bestätigt.</span></label><button id="prepare-next" class="button primary" disabled>Weiter zur Installation</button><details><summary>Kosten und Zugriffsrechte</summary><p>Wählen Sie bei beiden Anbietern den kostenlosen Tarif. Wird ein Nutzungslimit erreicht, kann der Dienst ausfallen.</p><p>Installieren Sie den Zeitplaner in Ihren eigenen Konten und geben Sie dem Entwickler keine Verwaltungsrechte. Prüfen Sie den Programmcode und spätere Updates selbst oder lassen Sie sie von einer Person Ihres Vertrauens prüfen.</p></details></section>
-<section id="deploy" hidden><p>Öffnen Sie Cloudflare über den Button unten. Wählen Sie Ihr Konto und einen neuen Projektnamen, zum Beispiel „mein-iserv-zeitplaner“.</p><ol><li>Unter <strong>Git account</strong> auf <strong>New GitHub connection</strong> klicken und das eigene GitHub-Konto verbinden. <strong>Create private Git repository</strong> aktivieren.</li><li>Die vorgeschlagenen Build- und Deploy-Einstellungen übernehmen.</li><li>Im Passwortmanager einen zufälligen Code mit mindestens 24 Zeichen erzeugen und speichern. Bei <strong>SETUP_CODE</strong> eintragen. Sie brauchen ihn gleich für die Einrichtung.</li><li>Die Installation starten und warten, bis Cloudflare „Success“ meldet.</li></ol><a id="deploy-link" class="button primary" target="_blank" rel="noopener noreferrer">Bei Cloudflare installieren</a><p class="hint" id="release-note"></p><details><summary>Hilfe bei der Installation</summary><p><strong>Weitere Einstellungen:</strong> „Enable Preview builds“ ausschalten und „Protect with Cloudflare Access“ ausgeschaltet lassen. MODE bleibt „production“, SELF_HOSTED bleibt „true“.</p><p><strong>E-Mail bestätigen:</strong> den Link im Postfach öffnen und die Installation fortsetzen. <strong>workers.dev-Adresse:</strong> eine Kontoadresse anlegen. <strong>Projektname belegt:</strong> einen neuen Namen wählen; vorhandene Projekte nicht überschreiben. <strong>Build abgebrochen:</strong> die Fehlermeldung im Cloudflare-Dashboard prüfen, bevor Sie es erneut versuchen.</p></details><button id="deploy-next" class="button secondary">Die Installation ist erfolgreich</button></section>
-<section id="open" hidden><p>Kopieren Sie die feste <strong>workers.dev-Adresse</strong> aus Ihrem Cloudflare-Projekt hierher. Auf Ihrer Website richten Sie anschließend die Anmeldung und die IServ-Verbindung ein.</p><label for="own-address">Website-Adresse</label><input id="own-address" type="url" inputmode="url" placeholder="https://mein-iserv-zeitplaner.mein-konto.workers.dev" autocomplete="off"><p class="hint">Einrichtungscode und IServ-Passwort erst dort eingeben.</p><a id="open-own" class="button primary" hidden rel="noreferrer">Einrichtung öffnen</a></section>
-<nav class="wizard-navigation" aria-label="Installationsschritte"><button id="back" class="quiet" hidden>Zurück</button><a class="quiet" href="https://github.com/landostock/iserv-zeitplaner" target="_blank" rel="noopener noreferrer">Quellcode</a></nav></section></main><footer class="wizard-footer">© 2026 Lando Stock</footer></body></html>
+<html lang="de">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#234e47"><title>IServ Zeitplaner einrichten</title><link rel="icon" href="/icon.svg"><link rel="stylesheet" href="/wizard.css"><script type="module" src="/installieren.ts"></script></head>
+<body class="wizard-page">
+<header class="wizard-top"><a href="/installieren.html" class="brand"><img src="/icon.svg" width="36" height="36" alt="">IServ <strong>Zeitplaner</strong></a><span>Einrichtung</span></header>
+<main class="wizard-shell">
+ <aside class="wizard-aside"><h1>Zeitplaner einrichten</h1><p>Danach können Sie Dateien zu einem festen Termin in IServ veröffentlichen.</p><ol id="steps"><li>Konten vorbereiten</li><li>Zeitplaner installieren</li><li>Website öffnen</li></ol></aside>
+ <section class="wizard-panel" aria-labelledby="step-title">
+  <div class="wizard-progress"><span id="step-count">Schritt 1 von 3</span><span>1.0.0-rc1 · Testversion</span></div><h2 id="step-title" tabindex="-1">Konten vorbereiten</h2><p id="status" role="status" hidden></p>
+  <section id="prepare">
+   <p>Öffnen Sie Ihre Konten bei Cloudflare und GitHub. Falls Sie noch keines haben, wählen Sie jeweils den kostenlosen Tarif.</p>
+   <div class="provider-options"><a href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer"><strong>Cloudflare <span aria-hidden="true">↗</span></strong><span>Betreibt Ihren Zeitplaner</span></a><a href="https://github.com/" target="_blank" rel="noopener noreferrer"><strong>GitHub <span aria-hidden="true">↗</span></strong><span>Speichert den Programmcode</span></a></div>
+   <label class="check"><input id="accounts-ready" type="checkbox"><span>Ich bin bei beiden Anbietern angemeldet und habe meine E-Mail-Adressen bestätigt.</span></label>
+   <button id="prepare-next" class="button primary" disabled>Weiter</button>
+   <details><summary>Kosten und Zugriffsrechte</summary><p>Wählen Sie bei beiden Anbietern den kostenlosen Tarif. Wird ein Nutzungslimit erreicht, kann der Dienst ausfallen.</p><p>Installieren Sie den Zeitplaner in Ihren eigenen Konten und geben Sie dem Entwickler keine Verwaltungsrechte. Prüfen Sie den Programmcode und spätere Updates selbst oder lassen Sie sie von einer Person Ihres Vertrauens prüfen.</p></details>
+  </section>
+  <section id="deploy" hidden>
+   <ol class="deployment-stages" aria-label="Installation bei Cloudflare"><li>GitHub verbinden</li><li>Installieren</li><li>Ergebnis prüfen</li></ol>
+   <section id="connect-github">
+    <p>Öffnen Sie die Vorlage bei Cloudflare. Unter <strong>Git account → New GitHub connection</strong> verbinden Sie Ihr GitHub-Konto. Kommen Sie danach in diesen Tab zurück.</p>
+    <a id="deploy-link" class="button primary deploy-template" target="_blank" rel="noopener noreferrer">Vorlage bei Cloudflare öffnen <span aria-hidden="true">↗</span></a>
+    <div class="return-help"><strong>Nach der Anmeldung erscheint „Select a repository“?</strong><p>Öffnen Sie die Vorlage über diesen Link erneut. Wählen Sie dort keines Ihrer anderen Projekte aus.</p><a id="reopen-template" class="deploy-template" target="_blank" rel="noopener noreferrer">Zur Zeitplaner-Vorlage <span aria-hidden="true">↗</span></a></div>
+    <button id="github-next" class="button secondary">GitHub ist verbunden – weiter</button>
+   </section>
+   <section id="configure-deploy" hidden>
+    <p>Öffnen Sie die Vorlage erneut. Prüfen Sie Ihr Konto und aktivieren Sie <strong>Create private Git repository</strong>. Sie müssen nur einen Projektnamen und einen Einrichtungscode eintragen.</p>
+    <div class="setup-fields"><div><label for="project-suggestion">Project name</label><div class="copy-field"><input id="project-suggestion" value="mein-iserv-zeitplaner" readonly autocomplete="off"><button id="copy-project" class="button secondary" aria-label="Projektname kopieren">Kopieren</button></div><p id="copy-status" class="hint" role="status" hidden></p></div><div><h3>SETUP_CODE</h3><p>Im Passwortmanager einen zufälligen Code mit mindestens 24 Zeichen erzeugen und speichern. Diesen Code nur bei Cloudflare eintragen; Sie brauchen ihn anschließend auf Ihrer eigenen Website.</p></div></div>
+    <a id="configure-link" class="button primary deploy-template" target="_blank" rel="noopener noreferrer">Installation bei Cloudflare öffnen <span aria-hidden="true">↗</span></a>
+    <details><summary>Welche Einstellungen soll ich lassen?</summary><p>Build command: <code>npm run build</code><br>Deploy command: <code>npm run deploy</code><br>„Enable Preview builds“ ausschalten. „Protect with Cloudflare Access“ ausgeschaltet lassen. Den Rest übernehmen.</p></details>
+    <details><summary>Projektname und Kontoadresse</summary><p>Sie können auch „iserv-zeitplaner“ verwenden. Die Website-Adresse enthält zusätzlich Ihre eigene Cloudflare-Kontoadresse. Ist der Projektname bereits in Ihrem Konto belegt, wählen Sie einen anderen; überschreiben Sie keine vorhandene Installation.</p></details>
+    <button id="configure-next" class="button secondary">Installation gestartet</button>
+   </section>
+   <section id="deployment-result" hidden>
+    <p>Warten Sie in Cloudflare auf die erfolgreiche Bereitstellung. Öffnen Sie anschließend die dort angezeigte <strong>workers.dev-Adresse</strong>.</p>
+    <p class="hint" id="release-note"></p>
+    <button id="deploy-next" class="button primary">Erfolgreich – Website öffnen</button>
+    <details><summary>Cloudflare braucht noch eine Angabe</summary><p><strong>E-Mail bestätigen:</strong> den Link im Postfach öffnen und im selben Projekt fortsetzen. <strong>workers.dev-Adresse:</strong> eine Kontoadresse anlegen. <strong>Build fehlgeschlagen:</strong> die Fehlermeldung im bestehenden Projekt prüfen. Legen Sie dafür keine zweite Kopie an.</p></details>
+   </section>
+  </section>
+  <section id="open" hidden>
+   <p>Kopieren Sie die feste <strong>workers.dev-Adresse</strong> aus Ihrem Cloudflare-Projekt hierher. Dort geht es mit Passkey und IServ-Verbindung weiter.</p>
+   <label for="own-address">Website-Adresse</label><input id="own-address" type="url" inputmode="url" placeholder="https://mein-iserv-zeitplaner.mein-konto.workers.dev" autocomplete="off" aria-describedby="address-hint">
+   <p id="address-hint" class="hint" role="status">Die Adresse endet auf .workers.dev. Einrichtungscode und IServ-Passwort erst auf Ihrer eigenen Website eingeben.</p>
+   <a id="open-own" class="button primary" hidden rel="noreferrer">Einrichtung öffnen</a>
+  </section>
+  <nav class="wizard-navigation" aria-label="Installationsschritte"><button id="back" class="quiet" hidden>Zurück</button><a class="quiet" href="https://github.com/landostock/iserv-zeitplaner" target="_blank" rel="noopener noreferrer">Quellcode</a></nav>
+  <noscript>Bitte JavaScript aktivieren und diese Seite neu laden.</noscript>
+ </section>
+</main><footer class="wizard-footer">© 2026 Lando Stock</footer>
+</body></html>

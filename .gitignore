@@ -7,4 +7,6 @@ dist/
 *.key
 *.secret
 secrets/
+test-results/
+playwright-report/
 .DS_Store

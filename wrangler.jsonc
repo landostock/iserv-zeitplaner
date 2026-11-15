@@ -20,6 +20,5 @@
   "ratelimits":[
     {"name":"API_LIMIT","namespace_id":"8301021","simple":{"limit":120,"period":60}},
     {"name":"AUTH_LIMIT","namespace_id":"8301022","simple":{"limit":10,"period":60}}
-  ],
-  "vars":{"MODE":"production","SELF_HOSTED":"true"}
+  ]
 }
