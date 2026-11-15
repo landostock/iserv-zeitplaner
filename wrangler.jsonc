@@ -1,0 +1,25 @@
+{
+  "$schema":"node_modules/wrangler/config-schema.json",
+  "name":"mein-iserv-zeitplaner",
+  "main":"src/personal-worker.ts",
+  "compatibility_date":"2026-10-28",
+  "compatibility_flags":["nodejs_compat"],
+  "workers_dev":true,
+  "preview_urls":false,
+  "assets":{"directory":"dist","binding":"ASSETS","run_worker_first":true,"html_handling":"none"},
+  "rules":[{"type":"Text","globs":["**/*.sql"],"fallthrough":true}],
+  "durable_objects":{"bindings":[
+    {"name":"INSTALLATION","class_name":"PersonalInstallation"},
+    {"name":"GATE","class_name":"PersonalAccessGate"},
+    {"name":"PUBLISHERS","class_name":"PersonalPublisher"},
+    {"name":"VAULT_OBJECTS","class_name":"SqliteObjects"}
+  ]},
+  "migrations":[{"tag":"personal-v1","new_sqlite_classes":["PersonalInstallation","PersonalAccessGate","PersonalPublisher","SqliteObjects"]}],
+  "triggers":{"crons":["* * * * *"]},
+  "observability":{"enabled":false},
+  "ratelimits":[
+    {"name":"API_LIMIT","namespace_id":"8301021","simple":{"limit":120,"period":60}},
+    {"name":"AUTH_LIMIT","namespace_id":"8301022","simple":{"limit":10,"period":60}}
+  ],
+  "vars":{"MODE":"production","SELF_HOSTED":"true"}
+}

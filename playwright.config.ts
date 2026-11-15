@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'./browser-tests',workers:1,timeout:60000,use:{baseURL:'http://localhost:8790',locale:'de-DE'},projects:[{name:'desktop',use:{browserName:'chromium',viewport:{width:1365,height:1100}}},{name:'ipad',use:{browserName:'webkit',viewport:{width:820,height:1180},hasTouch:true,isMobile:true}}],webServer:{command:'npm run build && npx vite preview --host 127.0.0.1 --port 8790 --strictPort',url:'http://localhost:8790/einrichten.html',reuseExistingServer:false}});
