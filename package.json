@@ -35,7 +35,7 @@
   "cloudflare": {
     "bindings": {
       "SETUP_CODE": {
-        "description": "Ein eigenes zufälliges Passwort mit mindestens 24 Zeichen aus Ihrem Passwortmanager. Hier als Secret speichern. Danach ausschließlich auf Ihrer neuen eigenen Website eingeben. Nicht an den Entwickler senden."
+        "description": "Zufälligen Code mit mindestens 24 Zeichen im Passwortmanager erzeugen und speichern. Hier als Secret eintragen. Sie brauchen ihn anschließend auf Ihrer neuen Website."
       }
     }
   }
