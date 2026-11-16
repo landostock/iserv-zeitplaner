@@ -29,7 +29,11 @@ Beim Praxistest führte die GitHub-Verknüpfung zur allgemeinen Repository-Auswa
 - Cloudflare bietet GitHub-Social-Login an. Laut Anbieter können API-Token trotzdem ein nachträglich gesetztes Cloudflare-Passwort erfordern. Diese Option ist daher noch kein Beleg für eine Installation ohne weitere Passwortschritte.
 - Der private Assistent prüft Uploadbeleg und Zeitsteuerung automatisch alle 15 Sekunden, solange der Testschritt sichtbar und die Sitzung gültig ist. Netzwerkfehler und verspätete Antworten dürfen keinen Abschluss auslösen.
 
-Die Formularprüfung hat weder neue Konten angelegt noch eine Installation in einem neuen Anbieterkonto abgeschlossen.
+Der Nutzer hat inzwischen getrennte GitHub- und Cloudflare-Testkonten angelegt. Beide angemeldeten Konten wurden im privaten Chrome-Fenster geprüft; die Cloudflare-E-Mail-Bestätigung hat der Nutzer abgeschlossen. Der Vorlagenimport über den öffentlichen Assistenten zeigt im neuen Konto die vorgesehenen Projekt-, Secret- und Build-Eingaben. Eine vollständige Installation in diesem neuen Anbieterkonto ist noch nicht abgeschlossen.
+
+Beim erstmaligen Verbinden erscheint zunächst **Authorize Cloudflare Workers and Pages** zur GitHub-Benutzerautorisierung. Erst danach folgt **Install & Authorize** mit der Repository-Auswahl und den getrennten Repository-Rechten. Der Assistent muss beide Dialoge berücksichtigen. Nach einer Unterbrechung wurde einmal ein deaktivierter Authorize-Button beobachtet; ein neu gestarteter Verknüpfungsdialog ließ sich autorisieren. Die Ursache des deaktivierten Buttons wurde nicht festgestellt.
+
+Bei der Cloudflare-Registrierung wurde die vorgeschlagene Gmail-Plusadresse laut Nutzer mit „A variation of this email address is already taken“ abgelehnt. Cloudflare dokumentiert dies als [Fehler 1104](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1104/). Plus- und Punktvarianten einer bestehenden Gmail-Adresse dürfen daher nicht als getrennte Cloudflare-Testidentität eingeplant werden. Dafür wird eine tatsächlich andere, vom Nutzer autorisierte Adresse benötigt. Ein zusätzlicher Cloudflare-Account unter einem bestehenden Profil kann Ressourcen trennen, prüft aber keine frische Benutzerregistrierung. Das bestehende Profil wird nicht umbenannt, gelöscht oder mit der Testidentität verknüpft.
 
 ## Notwendige reale Abnahme
 
