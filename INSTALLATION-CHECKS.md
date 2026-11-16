@@ -17,6 +17,7 @@ Die vorhandenen Release Notes und Prüfberichte des IServ-reMarkable-Assistenten
 | Ein Dry-run beweist keinen echten Upload | Der Assistent verwechselt Anmeldung oder Ordnerliste nicht mit einer veröffentlichten Datei. |
 | Fehlerdetails enthalten rohe Tokens, Namen oder Schulpfade | Kurze klassifizierte UI-Fehler; Support ohne Dateien, Passwörter oder Cloud-Tokens. |
 | App-Update statt Cloud-Update | Die eigene Repository-Kopie ist die Deploymentquelle. Keine lokalen Paketversionen neben einem separat veralteten Agenten. |
+| Cloudflare schreibt beim Vorlagenimport den Projektnamen in `package.json` um | Der erste echte Build stoppte deshalb an der bisherigen Dateiprüfsumme. Die Paketprüfung berücksichtigt ausschließlich diesen Namen sowie JSON-Formatierung. Skripte, Installations-Hooks, Abhängigkeiten, Lockfile-Inhalte und Quelltexte bleiben geprüft. |
 
 ## Rückkehr nach der GitHub-Verknüpfung
 
