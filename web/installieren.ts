@@ -19,6 +19,7 @@ function show(index:number,focus=true){
 $('accounts-ready').onchange=()=>{$<HTMLButtonElement>('prepare-next').disabled=!$<HTMLInputElement>('accounts-ready').checked;};
 $('prepare-next').onclick=()=>show(1);
 $('cloudflare-next').onclick=()=>show(2);
+$('github-connected').onclick=()=>show(3);
 $('github-next').onclick=()=>show(3);
 $('configure-next').onclick=()=>show(4);
 $('deploy-next').onclick=()=>show(5);

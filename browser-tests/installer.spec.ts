@@ -73,6 +73,35 @@ test('GitHub guidance shows one task and keeps troubleshooting behind help',asyn
  for(const viewport of [{width:375,height:812},{width:1024,height:768}]){await page.setViewportSize(viewport);await expect(page.locator('#github-next')).toBeInViewport();await expect(page.locator('#help summary')).toBeInViewport();}
  await page.locator('#help summary').click();await expect(page.locator('#reopen-template')).toBeVisible();await page.locator('#github-next').click();await expect(page.locator('#help')).not.toHaveAttribute('open','');await expect(page.locator('#reopen-template')).toBeHidden();
 });
+test('a connected GitHub account skips new installation permissions',async({page})=>{
+ await page.goto('/installieren.html#schritt=cloudflare');await expect(page.locator('#github-connected')).toBeVisible();await page.locator('#github-connected').click();
+ await expect(page.locator('#configure-deploy')).toBeVisible();await expect(page.locator('#connect-github')).toBeHidden();await expect(page).toHaveURL(/#schritt=installation$/);
+});
+test('a bare school address works without requiring the owner to add https',async({page})=>{
+ const f=await fixture(page,'initialize');await page.goto('/einrichten.html');await expect(page.locator('#initialize')).toBeVisible();
+ await page.locator('#setup-code').fill('synthetic-setup-code-at-least-24');await page.locator('#school').fill('schule.de/iserv/login');await page.locator('#own-consent').check();await page.getByRole('button',{name:'Einrichtung starten',exact:true}).click();
+ await expect(page.locator('#claim')).toBeVisible();expect(f.writes[0].school).toBe('https://schule.de');expect(f.writes[0].dav).toBe('https://webdav.schule.de');
+});
+test('publication proof advances automatically only after both upload and scheduler are confirmed',async({page})=>{
+ await page.clock.install();const f=await fixture(page,'test');let verifiedAt:number|null=null,schedulerHealthy=true;
+ await page.route('**/api/installation',r=>r.fulfill({contentType:'application/json',body:JSON.stringify({school:'https://school.de',createdAt:now-10000,reserveAt:now,verifiedAt,schedulerHealthy,monitor:null})}));
+ await page.goto('/einrichten.html');await expect(page.locator('#test')).toBeVisible();await page.clock.fastForward(16000);await expect(page.locator('#test')).toBeVisible();
+ verifiedAt=now;schedulerHealthy=false;await page.clock.fastForward(16000);await expect(page.locator('#test')).toBeVisible();
+ schedulerHealthy=true;await page.clock.fastForward(16000);await expect(page.locator('#monitor')).toBeVisible();expect(f.writes).toEqual([]);
+});
+test('a slow automatic publication check cannot override the owners navigation',async({page})=>{
+ await page.clock.install();await fixture(page,'test');await page.goto('/einrichten.html');await expect(page.locator('#test')).toBeVisible();
+ let release:()=>void=()=>{};const pending=new Promise<void>(resolve=>{release=resolve;});let started=false;
+ await page.route('**/api/installation',async r=>{started=true;await pending;await r.fulfill({contentType:'application/json',body:JSON.stringify({verifiedAt:now,schedulerHealthy:true,monitor:null})});});
+ await page.clock.fastForward(16000);await expect.poll(()=>started).toBe(true);await page.locator('#back').click();await expect(page.locator('#connect')).toBeVisible();
+ const response=page.waitForResponse('**/api/installation');release();await (await response).finished();await page.waitForTimeout(50);
+ await expect(page.locator('#connect')).toBeVisible();await expect(page.locator('#monitor')).toBeHidden();
+});
+test('automatic progress checks stop when the account session expires',async({page})=>{
+ await page.clock.install();await fixture(page,'test');await page.goto('/einrichten.html');await expect(page.locator('#test')).toBeVisible();let progressReads=0;
+ await page.route('**/api/installation',async r=>{progressReads++;await r.fulfill({contentType:'application/json',body:'{"verifiedAt":1,"schedulerHealthy":true}'});});
+ await page.route('**/api/session',r=>r.fulfill({contentType:'application/json',body:'{"user":null}'}));await page.clock.fastForward(16000);await expect(page.locator('#signin')).toBeVisible();expect(progressReads).toBe(0);
+});
 test('initialization clears the code, preserves the correct host and asks explicit owner consent',async({page})=>{
  const f=await fixture(page,'initialize');await page.goto('/einrichten.html');await expect(page.locator('#initialize')).toBeVisible();
  await page.locator('#setup-code').fill('synthetic-setup-code-at-least-24');await page.locator('#school').fill('https://schule.de/iserv/login');await page.locator('#own-consent').check();await page.getByRole('button',{name:'Einrichtung starten',exact:true}).click();

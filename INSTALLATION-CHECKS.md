@@ -22,6 +22,15 @@ Die vorhandenen Release Notes und Prüfberichte des IServ-reMarkable-Assistenten
 
 Beim Praxistest führte die GitHub-Verknüpfung zur allgemeinen Repository-Auswahl statt zurück zur Zeitplaner-Vorlage. Der öffentliche Assistent führt die Verknüpfung deshalb als eigene Etappe, bietet erneut den vollständigen Vorlagenlink und speichert nur den aktuellen Schritt als erlaubten URL-Fragmentwert. Er erkennt weder Anbieter-Anmeldungen noch einen erfolgreichen Cloudflare-Build automatisch. Zugangscodes, private Website-Adressen und Kontodaten werden dabei nicht im Browser-Speicher abgelegt. MODE und SELF_HOSTED werden intern gesetzt; das Cloudflare-Formular benötigt diese Variablen nicht mehr.
 
+## Beobachtungen im realen Browser am 16.11.2026
+
+- Ein bereits verbundenes GitHub-Konto muss unter „Git account“ erneut ausgewählt werden; es ist nicht zwingend vorausgewählt. Die Anleitung bietet dafür einen direkten Weg ohne neue Freigabe.
+- Im leeren Browser konnte vor der GitHub-Registrierung eine Geräteprüfung erscheinen. Diese Prüfung wird nicht umgangen.
+- Cloudflare bietet GitHub-Social-Login an. Laut Anbieter können API-Token trotzdem ein nachträglich gesetztes Cloudflare-Passwort erfordern. Diese Option ist daher noch kein Beleg für eine Installation ohne weitere Passwortschritte.
+- Der private Assistent prüft Uploadbeleg und Zeitsteuerung automatisch alle 15 Sekunden, solange der Testschritt sichtbar und die Sitzung gültig ist. Netzwerkfehler und verspätete Antworten dürfen keinen Abschluss auslösen.
+
+Die Formularprüfung hat weder neue Konten angelegt noch eine Installation in einem neuen Anbieterkonto abgeschlossen.
+
 ## Notwendige reale Abnahme
 
 Automatische Tests decken Ursprungssperren, Eingabegrenzen, falschen Einrichtungscode, Single-use-Passkey, private Routen, CSRF, Fortsetzung, echte SQLite-Persistenz, Neustart, Dateiplanung, nativen Alarm, WebDAV-Übertragung und Rückprüfung mit synthetischen Daten ab. Browserprüfungen decken Chromium und WebKit einschließlich iPad-Größen, schmaler Ansicht, größerer Schrift, falscher Adresse, Passwortfeld-Leeren und Mailbestätigung ab.

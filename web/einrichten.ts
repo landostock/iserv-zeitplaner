@@ -2,7 +2,7 @@ import {startAuthentication} from '@simplewebauthn/browser';
 const $=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id)as T;
 const panels=['initialize','claim','signin','reserve','connect','test','monitor','finished'];
 let session:any=null,account:any=null,installation:any=null,phase='',busy=false,resuming=false;
-let identityEpoch=0;
+let identityEpoch=0,pollingProgress=false;
 function clearPrivate(){identityEpoch++;session=null;account=null;installation=null;for(const id of ['setup-code','password','recovery','monitor-url','username'])$<HTMLInputElement|HTMLTextAreaElement>(id).value='';$('recovery-box').hidden=true;$('make-recovery').hidden=false;$<HTMLInputElement>('recovery-saved').checked=false;show('signin','Bitte erneut anmelden','Die Sitzung ist abgelaufen oder wurde gewechselt.',2);}
 const errors:Record<string,string>={setup_code_missing:'In Cloudflare fehlt SETUP_CODE oder der Code ist kürzer als 24 Zeichen. Öffnen Sie Einstellungen → Variablen und Geheimnisse, hinterlegen Sie einen eigenen langen Code als Secret und veröffentlichen Sie die Änderung.',setup_code_invalid:'Der Einrichtungscode stimmt nicht. Verwenden Sie den Code aus Ihrem eigenen Cloudflare-Konto.',invalid_school:'Bitte eine öffentliche HTTPS-Adresse ohne Benutzername, Port oder Dateipfad eingeben.',canonical_address_required:'Öffnen Sie die feste workers.dev-Adresse aus Ihrem Cloudflare-Dashboard. Vorschauadressen werden nicht unterstützt.',too_many_requests:'Bitte eine Minute warten und dann erneut versuchen.',needs_auth:'Bitte Ihren IServ-Zugang prüfen. Bei abweichender WebDAV-Adresse die Ersteinrichtung kontrollieren.',permission_denied:'IServ erlaubt den Zugriff nicht. Prüfen Sie Benutzername, Passwort und WebDAV-Adresse.',connection_failed:'IServ ist gerade nicht erreichbar. Es wurde kein erfolgreicher Verbindungstest bestätigt.',login_required:'Bitte erneut mit Ihrem Passkey anmelden.',monitor_unavailable:'Die Überwachung hat den Test nicht bestätigt. Prüfen Sie die kopierte Ping-Adresse und versuchen Sie es erneut.',invalid_monitor:'Bitte genau die Ping-Adresse von Healthchecks.io einfügen: https://hc-ping.com/ gefolgt von der Kennung.',monitor_test_required:'Bitte zuerst die Testwarnung senden und ihren Empfang bestätigen.',school_already_in_use:'Diese Installation wird bereits verwendet. Zum Schutz gespeicherter Aufträge wird der Server nicht gewechselt. Für eine andere Schule richten Sie eine getrennte Installation ein.',network:'Die Antwort ist ausgeblieben. Prüfen Sie den Status erneut, bevor Sie einen Schritt wiederholen.',setup_required:'Diese Installation ist noch nicht vollständig eingerichtet.'};
 function status(text:string,error=false){$('status').hidden=false;$('status').textContent=text;$('status').className=error?'error':'';}
@@ -32,7 +32,7 @@ function finished(){show('finished','Einrichtung abgeschlossen','Sie können den
 async function proof(){const d=await api('/auth/passkey/login/options',{purpose:'manage-account'}),response=await startAuthentication({optionsJSON:d.options});return (await api('/auth/passkey/login/verify',{response})).stepUp;}
 $('initialize-form').onsubmit=e=>{e.preventDefault();void action(async()=>{
  const code=$<HTMLInputElement>('setup-code').value;let school=$<HTMLInputElement>('school').value.trim(),dav=$<HTMLInputElement>('dav').value.trim();
- try{if(!resuming){const u=new URL(school);if(u.username||u.password)throw 0;school=u.origin;if(!dav)dav='https://webdav.'+u.hostname.replace(/^www\./,'');}}catch{throw new Error('invalid_school');}
+ try{if(!resuming){const u=new URL(school.includes('://')?school:'https://'+school);if(u.username||u.password)throw 0;school=u.origin;if(!dav)dav='https://webdav.'+u.hostname.replace(/^www\./,'');}}catch{throw new Error('invalid_school');}
  $<HTMLInputElement>('setup-code').value='';
  const d=await api('/setup/initialize',{setupCode:code,school,dav,consent:$<HTMLInputElement>('own-consent').checked?'own-account-and-encrypted-iserv-storage':''});
  const link=new URL(d.invitation);if(link.origin!==location.origin||!/^#einladung=[a-f0-9]{64}$/.test(link.hash))throw new Error('network');
@@ -53,7 +53,20 @@ $('confirm-alert').onclick=()=>void action(async()=>{if(!$<HTMLInputElement>('em
 $('skip-monitor').onclick=finished;$('revisit-monitor').onclick=()=>{monitorPanel();$<HTMLDetailsElement>('monitor-help').open=true;};
 $('back').onclick=()=>{if(phase==='monitor')show('test','Veröffentlichung testen','Ein bereits erfolgreicher Test bleibt gespeichert.',4);else if(phase==='test')show('connect','IServ-Verbindung erneuern','Vorhandene Aufträge bleiben erhalten, wenn Sie dasselbe IServ-Konto verbinden.',3);else if(phase==='connect')show('reserve','Wiederherstellungscode','Wenn Sie einen neuen Code erzeugen, wird der bisherige ungültig.',2);};
 window.addEventListener('pagehide',()=>{for(const id of ['setup-code','password','recovery','monitor-url'])($<HTMLInputElement|HTMLTextAreaElement>(id)).value='';});
-async function checkSession(){if(!session?.user||busy)return;const previous=session.user.id;try{const current=await api('/api/session');if(current.user?.id!==previous){clearPrivate();status('Bitte melden Sie sich erneut an und prüfen Sie den Einrichtungsstand.');}}catch{}}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void checkSession();});
-setInterval(()=>{if(document.visibilityState==='visible')void checkSession();},15000);
+async function checkSession(){if(!session?.user||busy)return false;const previous=session.user.id;try{const current=await api('/api/session');if(current.user?.id!==previous){clearPrivate();status('Bitte melden Sie sich erneut an und prüfen Sie den Einrichtungsstand.');return false;}return true;}catch{return false;}}
+async function checkProgress(){
+ if(phase!=='test'||!session?.user||busy||pollingProgress||document.visibilityState!=='visible')return;
+ const epoch=identityEpoch;pollingProgress=true;
+ try{
+  const next=await api('/api/installation');
+  // A late result must not undo navigation, a sign-out or another account's session.
+  if(epoch!==identityEpoch||phase!=='test'||busy)return;
+  installation=next;
+  if(next.verifiedAt&&next.schedulerHealthy){if(next.monitor?.confirmedAt)finished();else monitorPanel();}
+ }catch{/* A missing response is never treated as a successful publication. Manual checking remains available. */}
+ finally{pollingProgress=false;}
+}
+async function checkBackground(){if(await checkSession())await checkProgress();}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void checkBackground();});
+setInterval(()=>{if(document.visibilityState==='visible')void checkBackground();},15000);
 void action(refresh);
