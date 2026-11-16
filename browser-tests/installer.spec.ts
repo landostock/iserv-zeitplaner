@@ -20,8 +20,9 @@ test('public installer needs no secret and opens only a canonical own address',a
  const requests:string[]=[];page.on('request',r=>requests.push(r.url()));await page.goto('/installieren.html');
  await expect(page.locator('#prepare-next')).toBeDisabled();await page.locator('#accounts-ready').check();await page.locator('#prepare-next').click();
  await expect(page.locator('#deploy-link')).toHaveAttribute('href',/^https:\/\/deploy\.workers\.cloudflare\.com\//);
+ await page.locator('#cloudflare-next').click();
  await page.locator('#github-next').click();await page.locator('#configure-next').click();
- await page.locator('#deploy-next').click();
+ await page.locator('#deploy-next').click();await page.locator('#scope-next').click();
  for(const bad of ['https://worker.owner.workers.dev.evil.org','http://worker.owner.workers.dev','https://v1.worker.owner.workers.dev','https://user:pass@worker.owner.workers.dev']){await page.locator('#own-address').fill(bad);await expect(page.locator('#open-own')).toBeHidden();}
  await page.locator('#own-address').fill('https://worker.owner.workers.dev');await expect(page.locator('#open-own')).toHaveAttribute('href','https://worker.owner.workers.dev/einrichten');
  expect(requests.every(url=>new URL(url).hostname==='localhost')).toBe(true);expect(await page.locator('input[type=password]').count()).toBe(0);
@@ -31,14 +32,16 @@ test('public setup resumes each provider handoff without storing accounts or sec
  await page.goto('/installieren.html#schritt=github');
  await expect(page.locator('#connect-github')).toBeVisible();
  const template='https://deploy.workers.cloudflare.com/?url='+encodeURIComponent('https://github.com/landostock/iserv-zeitplaner');
+ await expect(page.locator('#help')).not.toHaveAttribute('open','');await page.locator('#help summary').click();
  await expect(page.locator('#reopen-template')).toHaveAttribute('href',template);
- await expect(page.locator('.return-help')).toContainText('Select a repository');
+ await expect(page.locator('#help')).toContainText('Select a repository');
  await page.locator('#github-next').click();await page.reload();
  await expect(page.locator('#configure-deploy')).toBeVisible();
  await expect(page.locator('#configure-link')).toHaveAttribute('href',template);
  await page.locator('#configure-next').click();await page.reload();await expect(page.locator('#deployment-result')).toBeVisible();
- await page.locator('#deploy-next').click();await page.reload();await expect(page.locator('#open')).toBeVisible();
- await page.locator('#back').click();await expect(page.locator('#deployment-result')).toBeVisible();
+ await page.locator('#deploy-next').click();await page.reload();await expect(page.locator('#review-github')).toBeVisible();
+ await page.locator('#scope-next').click();await page.reload();await expect(page.locator('#open')).toBeVisible();
+ await page.locator('#back').click();await expect(page.locator('#review-github')).toBeVisible();
  expect(await page.evaluate(()=>({local:localStorage.length,session:sessionStorage.length}))).toEqual({local:0,session:0});
  await page.goto('/installieren.html#schritt=unknown');await expect(page.locator('#prepare')).toBeVisible();
 });
@@ -56,11 +59,19 @@ test('copying a project name has a manual fallback and public steps fit narrow s
  await page.addInitScript(()=>{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new Error('denied');}}});});
  await page.goto('/installieren.html#schritt=installation');await page.locator('#copy-project').click();await expect(page.locator('#copy-status')).toContainText('markierten');
  expect(await page.locator('#project-suggestion').evaluate((e:HTMLInputElement)=>e.selectionEnd!-e.selectionStart!)).toBeGreaterThan(0);
- for(const width of [1024,820,375]){await page.setViewportSize({width,height:1180});for(const phase of ['konten','github','installation','ergebnis','website']){
+ for(const width of [1024,820,375]){await page.setViewportSize({width,height:1180});for(const phase of ['konten','cloudflare','github','installation','ergebnis','zugriff','website']){
   await page.goto('/installieren.html#schritt='+phase);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
  }}
  await page.setViewportSize({width:820,height:1180});await page.goto('/installieren.html#schritt=github');await page.screenshot({path:'test-results/installer-github-handoff.png',fullPage:true});
  await page.goto('/installieren.html#schritt=installation');await page.screenshot({path:'test-results/installer-cloudflare-settings.png',fullPage:true});
+});
+test('GitHub guidance shows one task and keeps troubleshooting behind help',async({page})=>{
+ await page.goto('/installieren.html#schritt=github');
+ await expect(page.locator('#github-permissions')).toContainText('All repositories');await expect(page.locator('#github-permissions')).toContainText('Install & Authorize');
+ await expect(page.locator('#connect-cloudflare')).toBeHidden();await expect(page.locator('#configure-deploy')).toBeHidden();await expect(page.locator('#help')).not.toHaveAttribute('open','');
+ await expect(page.locator('#reopen-template')).toBeHidden();await expect(page.locator('.deployment-stages')).toHaveCount(0);
+ for(const viewport of [{width:375,height:812},{width:1024,height:768}]){await page.setViewportSize(viewport);await expect(page.locator('#github-next')).toBeInViewport();await expect(page.locator('#help summary')).toBeInViewport();}
+ await page.locator('#help summary').click();await expect(page.locator('#reopen-template')).toBeVisible();await page.locator('#github-next').click();await expect(page.locator('#help')).not.toHaveAttribute('open','');await expect(page.locator('#reopen-template')).toBeHidden();
 });
 test('initialization clears the code, preserves the correct host and asks explicit owner consent',async({page})=>{
  const f=await fixture(page,'initialize');await page.goto('/einrichten.html');await expect(page.locator('#initialize')).toBeVisible();
