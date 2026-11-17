@@ -8,7 +8,7 @@ for(const a of document.querySelectorAll<HTMLAnchorElement>('.deploy-template'))
 function show(index:number,focus=true){
  current=index;
  for(const [i,id]of panels.entries())$(id).hidden=i!==index;
- $('step-count').textContent='Schritt '+(index+1)+' von '+states.length;
+ $('step-count').textContent='Teil 1 · Schritt '+(index+1)+' von '+states.length;
  $('step-title').textContent=['Konten anmelden','GitHub verbinden','GitHub freigeben','Zeitplaner installieren','Bereitstellung abwarten','Zugriff begrenzen','Website öffnen'][index];
  $('back').hidden=index===0;
  $<HTMLDetailsElement>('help').open=false;
