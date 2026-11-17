@@ -2,12 +2,13 @@
 <html lang="de">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#234e47"><title>IServ Zeitplaner einrichten</title><link rel="icon" href="/icon.svg"><link rel="stylesheet" href="/wizard.css"><script type="module" src="/installieren.ts"></script></head>
 <body class="wizard-page installer-page">
-<header class="wizard-top"><a href="/installieren.html" class="brand"><img src="/icon.svg" width="36" height="36" alt="">IServ <strong>Zeitplaner</strong></a><span>Einrichtung</span></header>
+<header class="wizard-top"><a href="/installieren.html" class="brand"><img src="/icon.svg" width="36" height="36" alt="">IServ <strong>Zeitplaner</strong></a><span>Teil 1 · Website installieren</span></header>
 <main class="wizard-shell installer-shell">
  <section class="wizard-panel" aria-labelledby="step-title">
   <div class="wizard-progress"><span id="step-count">Schritt 1 von 7</span><span>Testversion</span></div><h1 id="step-title" tabindex="-1">Konten anmelden</h1><p id="status" role="status" hidden></p>
   <section id="prepare">
-   <p>Melden Sie sich zuerst bei GitHub, dann bei Cloudflare an. Falls Sie noch kein Konto haben, wählen Sie den kostenlosen Tarif.</p>
+   <p>Hier installieren Sie Ihre eigene Website. Danach richten Sie dort die Anmeldung und IServ ein.</p>
+   <p>Melden Sie sich zuerst bei GitHub, dann bei Cloudflare an. Falls Sie noch kein Konto haben, legen Sie eines im kostenlosen Tarif an.</p>
    <div class="provider-options"><a href="https://github.com/" target="_blank" rel="noopener noreferrer"><strong>1. GitHub <span aria-hidden="true">↗</span></strong><span>Anmelden oder Konto anlegen</span></a><a href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer"><strong>2. Cloudflare <span aria-hidden="true">↗</span></strong><span>Anmelden oder Konto anlegen</span></a></div>
    <label class="check"><input id="accounts-ready" type="checkbox"><span>Ich bin angemeldet und habe meine E-Mail-Adressen bestätigt.</span></label>
    <button id="prepare-next" class="button primary" disabled>Weiter</button>
@@ -44,10 +45,11 @@
    <button id="scope-next" class="next-action">Zugriff geprüft – weiter <span aria-hidden="true">→</span></button>
   </section>
   <section id="open" hidden>
-   <p>Fügen Sie die <strong>workers.dev-Adresse</strong> aus Ihrem Cloudflare-Projekt ein. Auf Ihrer Website richten Sie die Anmeldung und IServ ein.</p>
+   <p>Die Installation ist abgeschlossen. Fügen Sie die <strong>workers.dev-Adresse</strong> aus Ihrem Cloudflare-Projekt ein.</p>
+   <p>Auf Ihrer Website geht es mit Teil 2 weiter: fünf Schritte für Anmeldung, IServ und einen Veröffentlichungstest. GitHub und Cloudflare müssen Sie dort nicht erneut einrichten.</p>
    <label for="own-address">Website-Adresse</label><input id="own-address" type="url" inputmode="url" placeholder="mein-iserv-zeitplaner.mein-konto.workers.dev" autocomplete="off" aria-describedby="address-hint">
    <p id="address-hint" class="hint" role="status">Einrichtungscode und IServ-Passwort erst auf Ihrer eigenen Website eingeben.</p>
-   <a id="open-own" class="button primary" hidden rel="noreferrer">Einrichtung öffnen <span aria-hidden="true">→</span></a>
+   <a id="open-own" class="button primary" hidden rel="noreferrer">Weiter zur persönlichen Einrichtung <span aria-hidden="true">→</span></a>
   </section>
   <nav class="installer-tools" aria-label="Einrichtung"><button id="back" class="quiet" hidden>← Zurück</button>
    <details id="help"><summary>Hilfe</summary>
@@ -57,7 +59,7 @@
     <div data-help="ergebnis" hidden><h2>Cloudflare braucht noch eine Angabe</h2><p><strong>E-Mail bestätigen:</strong> den Link im Postfach öffnen und im selben Projekt fortsetzen. <strong>workers.dev-Adresse:</strong> eine Kontoadresse anlegen. <strong>Build fehlgeschlagen:</strong> die Fehlermeldung im bestehenden Projekt prüfen. Legen Sie dafür keine zweite Kopie an.</p></div>
     <div data-help="zugriff" hidden><h2>Welche Projekte auswählen?</h2><p>Ihre neu angelegte Zeitplaner-Kopie muss ausgewählt sein. Lassen Sie auch andere Projekte ausgewählt, die Sie bereits über Cloudflare betreiben. Für nicht ausgewählte Repositories funktionieren deren künftige Cloudflare-Builds nicht mehr.</p></div>
     <div data-help="website" hidden><h2>Wo finde ich die Adresse?</h2><p>Öffnen Sie Ihren Worker im Cloudflare-Dashboard. Kopieren Sie die feste Adresse mit der Endung workers.dev, keine Vorschauadresse und keinen Dashboard-Link.</p></div>
-    <p class="release-info">1.0.0-rc1 · Der vollständige Erstlauf mit neuen Anbieterkonten ist noch nicht abschließend geprüft. <a href="https://github.com/landostock/iserv-zeitplaner" target="_blank" rel="noopener noreferrer">Quellcode ↗</a></p>
+    <p class="release-info">1.0.0-rc1 · Mit neuen GitHub- und Cloudflare-Konten bis zur automatischen IServ-Veröffentlichung getestet. Eine Erstinstallation auf einem echten iPad steht noch aus. <a href="https://github.com/landostock/iserv-zeitplaner" target="_blank" rel="noopener noreferrer">Quellcode ↗</a></p>
    </details>
   </nav><noscript>Bitte JavaScript aktivieren und diese Seite neu laden.</noscript>
  </section>
