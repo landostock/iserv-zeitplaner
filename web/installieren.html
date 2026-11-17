@@ -27,10 +27,10 @@
    <button id="github-next" class="button primary">Freigabe bestätigt – weiter</button>
   </section>
   <section id="configure-deploy" hidden>
+   <a id="configure-link" class="button primary deploy-template" target="_blank" rel="noopener noreferrer">Installation öffnen <span aria-hidden="true">↗</span></a>
    <p>Wählen Sie bei Cloudflare unter <strong>Git account</strong> Ihren GitHub-Namen und aktivieren Sie <strong>Create private Git repository</strong>.</p>
    <div class="setup-fields"><div><label for="project-suggestion">Project name</label><div class="copy-field"><input id="project-suggestion" value="mein-iserv-zeitplaner" readonly autocomplete="off"><button id="copy-project" class="button secondary" aria-label="Projektname kopieren">Kopieren</button></div><p id="copy-status" class="hint" role="status" hidden></p></div><div><h2>SETUP_CODE</h2><p>Im Passwortmanager einen zufälligen Code mit mindestens 24 Zeichen erzeugen und speichern. Nur bei Cloudflare eintragen.</p></div></div>
    <p><strong>Enable Preview builds</strong> ausschalten. Die übrigen Einstellungen übernehmen und bei Cloudflare auf <strong>Deploy</strong> klicken.</p>
-   <a id="configure-link" class="button primary deploy-template" target="_blank" rel="noopener noreferrer">Installation öffnen <span aria-hidden="true">↗</span></a>
    <button id="configure-next" class="next-action">Installation gestartet <span aria-hidden="true">→</span></button>
   </section>
   <section id="deployment-result" hidden>
@@ -46,11 +46,12 @@
    <button id="scope-next" class="next-action">Zugriff geprüft – weiter <span aria-hidden="true">→</span></button>
   </section>
   <section id="open" hidden>
-   <p>Die Installation ist abgeschlossen. Fügen Sie die <strong>workers.dev-Adresse</strong> aus Ihrem Cloudflare-Projekt ein.</p>
-   <p>Auf Ihrer Website geht es mit Teil 2 weiter: fünf Schritte für Anmeldung, IServ und einen Veröffentlichungstest. GitHub und Cloudflare müssen Sie dort nicht erneut einrichten.</p>
+   <p>Wechseln Sie zum Cloudflare-Tab Ihres Zeitplaners und öffnen Sie oben <strong>Domains</strong> zwischen „Issues“ und „Access“.</p>
+   <p>Kopieren Sie unter <strong>Worker URL → Production</strong> die Adresse mit der Endung <strong>workers.dev</strong> und fügen Sie sie hier ein.</p>
    <label for="own-address">Website-Adresse</label><input id="own-address" type="url" inputmode="url" placeholder="mein-iserv-zeitplaner.mein-konto.workers.dev" autocomplete="off" aria-describedby="address-hint">
    <p id="address-hint" class="hint" role="status">Einrichtungscode und IServ-Passwort erst auf Ihrer eigenen Website eingeben.</p>
    <a id="open-own" class="button primary" hidden rel="noreferrer">Weiter zur persönlichen Einrichtung <span aria-hidden="true">→</span></a>
+   <p>Auf Ihrer Website folgt Teil 2: Anmeldung absichern, IServ verbinden und die Veröffentlichung testen.</p>
   </section>
   <nav class="installer-tools" aria-label="Einrichtung"><button id="back" class="quiet" hidden>← Zurück</button>
    <details id="help"><summary>Hilfe</summary>
@@ -59,7 +60,7 @@
     <div data-help="installation" hidden><h2>Weitere Einstellungen</h2><p>Build command: <code>npm run build</code><br>Deploy command: <code>npm run deploy</code><br>„Enable Preview builds“ ausschalten. „Protect with Cloudflare Access“ ausgeschaltet lassen. Den Rest übernehmen.</p><h2>Projektname</h2><p>„iserv-zeitplaner“ ist ebenfalls möglich: Die Adresse enthält zusätzlich Ihre Cloudflare-Kontoadresse. Ist der Name in Ihrem Konto belegt, wählen Sie einen anderen. Keine vorhandene Installation überschreiben.</p><h2>Einrichtungscode</h2><p>Bewahren Sie den Code im Passwortmanager auf. Sie brauchen ihn anschließend auf Ihrer eigenen Website. Geben Sie ihn hier nicht ein.</p></div>
     <div data-help="ergebnis" hidden><h2>Erfolg erkennen</h2><p>Entscheidend sind die grünen Häkchen beim gesamten Build und bei „Deploying“. Die Meldung „Success! Build completed.“ kann zusätzlich unten im Protokoll stehen; Sie müssen nicht danach suchen. „Ready“ in der Worker-Übersicht allein bestätigt keinen erfolgreichen Build.</p><h2>Cloudflare braucht noch eine Angabe</h2><p><strong>E-Mail bestätigen:</strong> den Link im Postfach öffnen und im selben Projekt fortsetzen. <strong>workers.dev-Adresse:</strong> eine Kontoadresse anlegen. <strong>Build fehlgeschlagen:</strong> die Fehlermeldung im bestehenden Projekt prüfen. Legen Sie dafür keine zweite Kopie an.</p></div>
     <div data-help="zugriff" hidden><h2>Welche Projekte auswählen?</h2><p>Ihre neu angelegte Zeitplaner-Kopie muss ausgewählt sein. Lassen Sie auch andere Projekte ausgewählt, die Sie bereits über Cloudflare betreiben. Für nicht ausgewählte Repositories funktionieren deren künftige Cloudflare-Builds nicht mehr.</p><h2>Nach „Save“ wieder bei Cloudflare?</h2><p>Das kann vorkommen. Kehren Sie zu diesem Assistenten zurück und gehen Sie hier weiter.</p></div>
-    <div data-help="website" hidden><h2>Wo finde ich die Adresse?</h2><p>Öffnen Sie Ihren Worker im Cloudflare-Dashboard. Kopieren Sie die feste Adresse mit der Endung workers.dev, keine Vorschauadresse und keinen Dashboard-Link.</p></div>
+    <div data-help="website" hidden><h2>Wo finde ich die Adresse?</h2><p>Öffnen Sie im Cloudflare-Tab Ihres Zeitplaners oben „Domains“. Unter „Worker URL“ steht bei „Production“ Ihre feste workers.dev-Adresse. Kopieren Sie diese Adresse, nicht den Eintrag bei „Preview“ und nicht die Dashboard-Adresse aus der Browserzeile.</p></div>
     <p class="release-info">1.0.0-rc1 · Mit neuen GitHub- und Cloudflare-Konten bis zur automatischen IServ-Veröffentlichung getestet. Eine Erstinstallation auf einem echten iPad steht noch aus. <a href="https://github.com/landostock/iserv-zeitplaner" target="_blank" rel="noopener noreferrer">Quellcode ↗</a></p>
    </details>
   </nav><noscript>Bitte JavaScript aktivieren und diese Seite neu laden.</noscript>
