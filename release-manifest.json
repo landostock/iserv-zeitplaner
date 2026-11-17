@@ -65,7 +65,7 @@
     "web/components.css": "26a0a46455dd9e98bf4d5e2203a9964d027d6f17838a5a32ae730c01d8b14dc2",
     "web/einrichten.html": "0e0905ffc18f2d1958fc77fa1b84cc447d1e0ef17ae7a45553da63e911eeb6ac",
     "web/einrichten.ts": "bcb0f111cddb3e371d8456778101daf8cf90147618f912a0ca04a042aac7a164",
-    "web/index.html": "3209eaaa7083cc9bc129ce6d449f1c863b5f2c2d54209eb58fdbc073da5b042c",
+    "web/index.html": "3349e43605b183351d1db81c55b7fb2be09e05da12bc388d6bcdbadb9bd154a7",
     "web/installieren.html": "5ad793a696eb434f95d7ea3b3ed3880efa00cf1e561557283f6eba91b8aa1381",
     "web/installieren.ts": "7c482ae2b1039456c92446aead6918ffad34f2cdb82b96c14ecec98a86c86241",
     "web/polish.css": "59c89d06677ff9a5869f5daa5903077192efd15184a395b1c55d0b62b10478f1",
@@ -132,6 +132,6 @@
     "playwright.config.ts": "1716240858350defa14030ccf656c59071a17f21342966327d5a6ab9ba365391",
     "README.md": "e8adc74ce70678f3c39d3f6f6008af7c37a85178b4bb5d96ff9cbf0ac7086f0d",
     "SECURITY.md": "75cd3043278b90ec24dc51487103848d8bf0194c96c336de1d04a7232b59169d",
-    "INSTALLATION-CHECKS.md": "b1d6fe530219766ed37e388b91169c939d20c83e3eb66d1e338e3b77451323cc"
+    "INSTALLATION-CHECKS.md": "47630c4a831772859d4f224150589150de5d08f4bf6a8a7f55b3739bbf5f1e7b"
   }
 }
