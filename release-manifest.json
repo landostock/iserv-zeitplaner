@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-rc2",
+  "version": "1.0.0-rc3",
   "hashMode": "sha256-project-package-name-v1",
   "files": {
     "src/access-auth.ts": "4f33e9effd9a5fa1902c6ef59ef00d6329b5b9d73ef37c0c76d20a44101e2b26",
@@ -67,7 +67,7 @@
     "web/einrichten.html": "6c38717e8b2d505af7923ab2c38efdec40c5f89ec765561b69e8cfc1c92a7bcf",
     "web/einrichten.ts": "bcb0f111cddb3e371d8456778101daf8cf90147618f912a0ca04a042aac7a164",
     "web/index.html": "208b2dae0b80d62eb9da4d124d8299f53180a02d8e170313cd6116634b0f4cf2",
-    "web/installieren.html": "0fd1e3281f3d7d40a2cf979c5c1010d656a826e6423734ac20887247ebfc07df",
+    "web/installieren.html": "85d47974e975d5c203bb62197ec6f5750260ca7352ed15d0281a906f8df5f1d5",
     "web/installieren.ts": "7c482ae2b1039456c92446aead6918ffad34f2cdb82b96c14ecec98a86c86241",
     "web/polish.css": "59c89d06677ff9a5869f5daa5903077192efd15184a395b1c55d0b62b10478f1",
     "web/public/base.css": "b1ecbc1a5d103ccb7e596cbdb02eb643a3017456d00a1ac88caeb60fab674f82",
@@ -127,18 +127,18 @@
     "test/personal-updates.test.ts": "2e51f796f541e81d5c2ebe2c154c8b4128e7f93923f79039f1b1ce98365259ae",
     "browser-tests/installer.spec.ts": "b2641aead59fd4778bf352cf3f83baf96f04a78bc4fe82392b2a1d474c95cd5b",
     "browser-tests/updates.spec.ts": "3e839254fa952870c0b75715b281da3f6ca061a6cc0761001e7e4761226b36cc",
-    "personal-release.json": "66582737fc7e84e4b104d1e2b7ea01d6f2818f8a195dbafe6edd115a300c11db",
+    "personal-release.json": "249a62e30d61eb0b50a4fedb0c2fb5c7546a0b7f172f4545b9c465fa283a047a",
     ".github/workflows/zeitplaner-update.yml": "ede63e8baf25436d55f1fd279a009749470e7b5a0b3516a59ef6fde1ed987885",
     ".dev.vars.example": "339d2d293d693bd1eea6fce724ba8574c9da460c32086f4c90689a5d5b026afc",
     ".gitignore": "8fbb2dac0b145e521900e887c3580f5101e6826160d62689c09e710afd4ee24a",
     ".node-version": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
-    "package.json": "b699c7456c7b0ceda56a4f4f045b0ab597946fa158a1b567f4e56228e3e568bc",
-    "package-lock.json": "d9d38bb19c6185d0c895ee7ec87f4b411482f3495f55e0b0652833b13b5b0368",
+    "package.json": "f1ff25609d31424a704e8c26c58b9160d6708a5d9416c2e776d6cc8c5f77b89c",
+    "package-lock.json": "3d0626e9f49828d0b570922ef83cf42c9c85f9650deb037621861beb4c3a5d0f",
     "tsconfig.json": "dcc076ef35873d7ddfcdd6899bc62171e30954a3ff4707ada334a0d27c098cfe",
     "tsconfig.web.json": "200bbb8f66ee23c47537b44dd27655285791e6ac4d7ba3cea1668d7231404c42",
     "vite.config.ts": "51f512d6b5091eb8917a2dd7594eaa2ad29d9562baba5ee86522b908ef10ddb7",
     "playwright.config.ts": "1716240858350defa14030ccf656c59071a17f21342966327d5a6ab9ba365391",
-    "README.md": "002368def8b42d45b3843f95b551c41d88a16721dcb4c6541eb63d7527c23051",
+    "README.md": "b53e17da8622aa421746f6dafa325ae202ac4c15c375b4db8cfd147ef1ac9195",
     "SECURITY.md": "75cd3043278b90ec24dc51487103848d8bf0194c96c336de1d04a7232b59169d",
     "INSTALLATION-CHECKS.md": "52a2ac5fdf2cec038e7d97742c9d1406f01af0d3a7e11ba548c6ca4c1c801ed6"
   }

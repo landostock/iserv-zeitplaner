@@ -1,9 +1,9 @@
 {
-  "version": "1.0.0-rc2",
+  "version": "1.0.0-rc3",
   "updaterProtocol": 1,
   "notes": [
-    "Updates in den Einstellungen erkennen und geführt übernehmen.",
-    "Healthchecks.io über die Hauptseite öffnen.",
-    "Überflüssige Dateinameninformationen aus der Ordnerauswahl entfernt."
+    "Updates in den Einstellungen anzeigen und die Übernahme im eigenen GitHub-Konto vorbereiten.",
+    "Die installierte Version nach der Veröffentlichung prüfen.",
+    "Healthchecks.io über die Hauptseite und „Sign Up“ einrichten."
   ]
 }

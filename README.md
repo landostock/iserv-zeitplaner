@@ -2,7 +2,7 @@
 
 Browser-Assistent für eine eigene Installation im eigenen Cloudflare-Konto. iPad, Windows, Linux und macOS benötigen weder Terminal noch lokale Installationsprogramme.
 
-**Stand: 17.11.2026 · 1.0.0-rc2.** Der reale Erstlauf mit neuen GitHub- und Cloudflare-Konten, Passkey, IServ-Verbindung und automatischer Veröffentlichung bei geschlossenem Zeitplaner ist abgeschlossen. Die optionale externe Ausfallüberwachung wurde dabei bewusst übersprungen. Eine Erstinstallation auf einem physischen iPad sowie unter Windows und Linux steht noch aus; automatisierte WebKit-Prüfungen ersetzen diese nicht.
+**Stand: 17.11.2026 · 1.0.0-rc3.** Der reale Erstlauf mit neuen GitHub- und Cloudflare-Konten, Passkey, IServ-Verbindung und automatischer Veröffentlichung bei geschlossenem Zeitplaner ist abgeschlossen. Die optionale externe Ausfallüberwachung wurde dabei bewusst übersprungen. Eine Erstinstallation auf einem physischen iPad sowie unter Windows und Linux steht noch aus; automatisierte WebKit-Prüfungen ersetzen diese nicht.
 
 ## Installation starten
 
