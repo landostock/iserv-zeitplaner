@@ -20,6 +20,7 @@ import {notifyPush,pushReady} from './push.ts';
 import {domainMigration} from './domain-migration.ts';
 import {installation} from './personal-binding.ts';
 import {activeAccount,consumeStepUp} from './account-security.ts';
+import {updateStatus} from './personal-updates.ts';
 export { SqliteObjects } from './sqlite-object-store.ts';
 
 export interface DurableEnv extends Env { GATE:DurableObjectNamespace; PUBLISHERS:DurableObjectNamespace; }
@@ -220,6 +221,17 @@ export class AccessGate extends DurableObject<DurableEnv> {
       if(p&&env.MODE==='production'&&env.AUTH_MODE==='passkey'){
         const account=await this.db.prepare('SELECT active FROM passkey_accounts WHERE school_id=? AND owner_id=?').bind(p.school,p.owner).first<{active:number}>();
         if(account?.active!==1){await this.db.prepare('DELETE FROM sessions WHERE school_id=? AND owner_id=?').bind(p.school,p.owner).run();p=null;}
+      }
+      if(env.SELF_HOSTED==='true'&&url.pathname==='/api/updates'){
+        if(!p)throw new AppError('login_required',401);
+        if((await activeAccount(env,p)).role!=='admin')throw new AppError('forbidden',403);
+        if(request.method==='GET'){
+          const repository=await(await installation(env).fetch('https://installation.internal/update-repository')).json()as {repository:string|null};
+          return json({...await updateStatus(),...repository});
+        }
+        if(request.method!=='POST')throw new AppError('not_found',404);
+        csrf(env,request,p);let d;try{d=JSON.parse(new TextDecoder().decode(await readLimited(request,2048)));}catch{throw new AppError('invalid_request');}
+        return installation(env).fetch('https://installation.internal/update-repository',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repository:d.repository})});
       }
       if(env.SELF_HOSTED==='true'&&url.pathname==='/api/installation'){
         if(!p)throw new AppError('login_required',401);

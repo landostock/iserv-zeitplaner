@@ -4,6 +4,7 @@ import {accountToken} from './account-security.ts';
 import {personalEnvironment,personalOrigin,publicHttps,PERSONAL_VERSION} from './personal-config.ts';
 import type {PersonalSettings} from './personal-config.ts';
 import type {Env} from './types.ts';
+import {updateRepository} from './personal-updates.ts';
 type Monitor={url:string;testAt:number|null;confirmedAt:number|null;lastSent:number|null;lastOK:boolean|null;deliveryFailed:boolean};
 const json=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 async function input(r:Request){if(!r.headers.get('content-type')?.startsWith('application/json'))throw new AppError('invalid_request',415);try{const d=JSON.parse(new TextDecoder().decode(await readLimited(r,4096)));if(!d||typeof d!=='object'||Array.isArray(d))throw 0;return d;}catch{throw new AppError('invalid_request');}}
@@ -39,6 +40,11 @@ export class PersonalInstallation extends DurableObject<Env>{
     }catch(e){return json({error:e instanceof AppError?e.code:'unexpected_error'},e instanceof AppError?e.status:500);}
    });
    const s=await this.settings();if(!s)throw new AppError('setup_required',503);
+   if(path==='/update-repository'){
+    if(r.method==='GET')return json({repository:await this.ctx.storage.get('updateRepository')||null});
+    const d=await input(r);let repository;try{repository=updateRepository(d.repository);}catch{throw new AppError('invalid_repository');}
+    await this.ctx.storage.put('updateRepository',repository);return json({repository});
+   }
    if(path==='/status'){const m=await this.monitor(s);return json({version:PERSONAL_VERSION,origin:s.origin,school:s.school,createdAt:s.createdAt,verifiedAt:await this.ctx.storage.get('verifiedAt')||null,reserveAt:await this.ctx.storage.get('reserveAt')||null,monitor:m?{configured:true,testAt:m.testAt,confirmedAt:m.confirmedAt,lastSent:m.lastSent,deliveryFailed:m.deliveryFailed}:null});}
    if(path==='/verified'){if(!await this.ctx.storage.get('verifiedAt'))await this.ctx.storage.put('verifiedAt',Date.now());return json({ok:true});}
    if(path==='/reserve-saved'){await this.ctx.storage.put('reserveAt',Date.now());return json({ok:true});}

@@ -1,6 +1,7 @@
 export {};
 import {initUI} from './ui.ts';
 import {initAccountUI} from './account.ts';
+import {initUpdatesUI} from './updates.ts';
 import {startRegistration,startAuthentication,browserSupportsWebAuthn} from '@simplewebauthn/browser';
 import { probeFeedback } from '../src/probe-feedback.ts';
 import type { ProbeDiagnostic } from '../src/probe-feedback.ts';
@@ -160,6 +161,7 @@ function showLogin(){ document.body.classList.add('is-login');document.body.clas
 }
 let sessionEpoch=0;
 function clearPrivateView(){
+  updatesUI.clear();
  sessionEpoch++;accountUI.reset();closeHelp();
  for(const panel of document.querySelectorAll<HTMLDialogElement>('dialog[open]'))panel.close();
  file=null;folder='';browsing='';selected=null;pending=null;pendingKey=null;resumeId=null;jobs=[];jobsLoaded=false;submitted=false;folderOriginal=false;browsingWritable=false;browsingOriginal=false;
@@ -175,7 +177,7 @@ function clearPrivateView(){
 async function refreshSession(signal?:AbortSignal){const previous=session?.user;session=await api('/api/session',{signal});$('startup-view').hidden=true;$('personal-setup').hidden=!session.selfHosted;if(previous&&(!session.user||(previous.id||previous.name)!==(session.user.id||session.user.name)))clearPrivateView();if(!session.user){dialog('settings-dialog').close();showLogin();return;}document.body.classList.remove('is-login');document.body.classList.toggle('is-workspace',session.mode!=='demo');$('login-view').hidden=true;$('app-view').hidden=false;$('logout').hidden=false;$('settings-open').hidden=false;$('demo-banner').hidden=session.mode!=='demo';$('local-probe-panel').hidden=session.mode!=='demo';$('ui-probe-panel').hidden=session.mode!=='demo';$('target-probe-panel').hidden=session.mode!=='demo';$('integration-block').hidden=!session.integrationBlock;$('integration-block').textContent=session.integrationBlock||'';$('passkey-enroll').hidden=true;$('passkey-backup').hidden=session.authMode!=='passkey';$('account-open').hidden=!session.accountManagementAvailable;$('account-name').textContent=session.user.name;$('school-label').textContent=session.school;if(session.stage==='personal-pilot'){if(!folder)$('chosen-folder').textContent='Privaten IServ-Ordner auswählen';$('folder-intro').textContent='Öffnen Sie einen eigenen privaten Testordner und wählen Sie ihn als Ziel aus.';$('demo-banner').hidden=false;$('demo-banner').textContent='Persönlicher Cloudtest · Bitte ausschließlich selbst erstellte Testdateien verwenden. Ziel ist Ihr eigener privater IServ-Bereich.';}
   if(session.stage==='group-pilot'){if(!folder)$('chosen-folder').textContent='IServ-Ordner auswählen';$('folder-intro').textContent='Zielordner öffnen und auswählen.';$('demo-banner').hidden=false;$('demo-banner').textContent='Persönlicher Gruppenpilot · Testversion';}
   if(bootstrapInvite&&!inviteNoticeShown){inviteNoticeShown=true;message('Ein Einladungslink wurde geöffnet. Melden Sie sich zuerst ab, um damit ein eigenes neues Konto einzurichten. Für eine andere Person können Sie den Link in einem privaten Browserfenster öffnen.');}
-  showReviewPolicy();
+  showReviewPolicy();updatesUI.refresh();
   void refreshPush().catch(()=>{ $('push-status').textContent='Der Benachrichtigungsstatus konnte gerade nicht geladen werden.'; });
   $('file-limit').textContent='Bis '+formatSize(session.maxFileBytes);$<HTMLButtonElement>('review').disabled=!session.ready;$<HTMLButtonElement>('choose-folder').disabled=!session.ready;schedulerWarning();await refreshConnection();}
 async function refreshConnection(){
@@ -330,6 +332,7 @@ async function runPasskey(register:boolean,legacy=false){
   }catch(e){if(session.legacyLoginOrigin){const link=$<HTMLAnchorElement>('legacy-login-link');link.href=session.legacyLoginOrigin;$('legacy-login').hidden=false;}out.textContent=e instanceof Error&&e.name==='SecurityError'?'Dieser Browser unterstützt die gemeinsame Passkey-Anmeldung noch nicht. Verwenden Sie die bisherige Adresse oder einen aktuellen Safari-, Chrome- oder Edge-Browser.':e instanceof Error&&e.name==='NotAllowedError'?'Die Gerätebestätigung wurde abgebrochen oder ist abgelaufen. Sie können sie erneut starten.':errorText(e);}
   finally{passkeyBusy=false;}
 }
+const updatesUI=initUpdatesUI({api,active:()=>Boolean(session?.selfHosted&&session.user)});
 const accountUI=initAccountUI({api,errorText,refresh:async()=>{await refreshSession();if(session.user)await refreshJobs();},hasUser:()=>Boolean(session?.user),notify:message,addDomainKey:async()=>{if(!$<HTMLInputElement>('new-key-label').value)$<HTMLInputElement>('new-key-label').value='Neue Adresse';await runPasskey(true);}});
 $('passkey-enroll').onsubmit=e=>{e.preventDefault();void runPasskey(true);};
 $('passkey-backup').onclick=()=>{void runPasskey(true);};

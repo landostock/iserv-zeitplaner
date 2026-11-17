@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
-import {personalOrigin,publicHttps} from '../src/personal-config.ts';
+import {personalOrigin,publicHttps,PERSONAL_VERSION} from '../src/personal-config.ts';
 import {syntheticAuthenticator} from './passkey-fixture.ts';
 import {sha256} from '../src/security.ts';
 import {mkdtemp,rm} from 'node:fs/promises';
@@ -17,11 +17,13 @@ test('personal addresses reject previews, phishing, credentials, insecure and pr
 });
 
 test('native personal installation is inert, private, resumable, origin pinned and passkey protected; heartbeat never leaks content',async()=>{
+ const beforeVersion=PERSONAL_VERSION,afterVersion=beforeVersion.replace(/rc(\d+)$/,(_,n)=>'rc'+(Number(n)+1));
  const origin='https://personal.synthetic.workers.dev',code='synthetic-install-code-24-characters-only';
  const bundle=await build({stdin:{contents:`import app,{PersonalInstallation,PersonalAccessGate,PersonalPublisher,SqliteObjects} from './src/personal-worker.ts';import {durableDatabase} from './src/durable-db.ts';export {PersonalInstallation,PersonalAccessGate,SqliteObjects};export class FixturePersonalPublisher extends PersonalPublisher{async fetch(r){if(new URL(r.url).pathname==='/_fixture/due'){const db=durableDatabase(this.ctx.storage);await db.prepare("UPDATE jobs SET due_at=?,next_attempt_at=? WHERE status='scheduled'").bind(Date.now()-1000,Date.now()-1000).run();await this.ctx.storage.setAlarm(Date.now()+30);return new Response(null,{status:204});}return super.fetch(r);}}export default app;`,resolveDir:process.cwd(),sourcefile:'personal-fixture.ts',loader:'ts'},bundle:true,write:false,format:'esm',platform:'browser',target:'es2023',external:['node:crypto','cloudflare:workers'],loader:{'.sql':'text'}});
  const outgoing:{url:string;body:string;auth:string|null}[]=[];let pingResponse='OK';const files=new Map<string,Uint8Array>();let puts=0,moves=0;
  const persist=await mkdtemp(join(tmpdir(),'iserv-personal-'));
  const options=convertV4MiniflareOptions({resourcePersistencePath:persist,isolatedResourcePersistencePath:persist,name:'personal-fixture',modules:true,script:bundle.outputFiles[0].text.replaceAll('.jurisdiction("eu")',''),compatibilityDate:'2026-10-28',compatibilityFlags:['nodejs_compat'],bindings:{SETUP_CODE:code},ratelimits:{API_LIMIT:{namespace_id:'personal-api',simple:{limit:1000,period:60}},AUTH_LIMIT:{namespace_id:'personal-auth',simple:{limit:1000,period:60}}},durableObjects:{INSTALLATION:{className:'PersonalInstallation',useSQLite:true},GATE:{className:'PersonalAccessGate',useSQLite:true},PUBLISHERS:{className:'FixturePersonalPublisher',useSQLite:true},VAULT_OBJECTS:{className:'SqliteObjects',useSQLite:true}},outboundService:async r=>{
+  if(r.url==='https://raw.githubusercontent.com/landostock/iserv-zeitplaner/main/release-channel.json'){assert.equal(r.headers.get('Authorization'),null);return Response.json({version:afterVersion,commit:'a'.repeat(40),updaterProtocol:1,notes:['Synthetic future release']});}
   if(r.url.startsWith('https://hc-ping.com/')){outgoing.push({url:r.url,body:await r.text(),auth:r.headers.get('Authorization')});return new Response(pingResponse);}
   const u=new URL(r.url);assert.equal(u.origin,'https://webdav.school.de');assert.match(r.headers.get('Authorization')||'',/^Basic /);
   if(r.method==='PROPFIND')return new Response('<d:multistatus xmlns:d="DAV:"><d:response><d:href>'+u.pathname+'</d:href><d:propstat><d:prop><d:resourcetype><d:collection/></d:resourcetype><d:current-user-privilege-set><d:privilege><d:bind/></d:privilege></d:current-user-privilege-set></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>',{status:207});
@@ -49,11 +51,15 @@ test('native personal installation is inert, private, resumable, origin pinned a
   const again=await call('/setup/initialize',{...payload,school:'https://different.de'});assert.equal(again.data.invitation,first.data.invitation);assert.equal(again.data.resumed,true);
   const anonymous=await call('/api/session');assert.equal(anonymous.status,200,JSON.stringify(anonymous.data));assert.equal(anonymous.data.selfHosted,true);assert.equal(anonymous.data.authReady,true);assert.equal(anonymous.data.user,null);
   for(const secret of ['VAULT_KEY','SETUP_CODE','PASSKEY_BOOTSTRAP_HASH',code])assert.ok(!JSON.stringify(anonymous.data).includes(secret));
-  assert.equal((await call('/api/installation')).status,401);
+  assert.equal((await call('/api/installation')).status,401);assert.equal((await call('/api/updates')).status,401);
   const auth=syntheticAuthenticator(),invite=new URL(first.data.invitation).hash.split('=')[1];
   const opts=await call('/auth/passkey/register/options',{invite,name:'Owner'});assert.equal(opts.status,200,JSON.stringify(opts.data));assert.equal(opts.data.options.rp.id,new URL(origin).hostname);
   const registered=await call('/auth/passkey/register/verify',{response:auth.registration(opts.data.options,origin)});assert.equal(registered.status,200,JSON.stringify(registered.data));
   const session=await call('/api/session');csrf=session.data.user.csrf;assert.ok(csrf);
+  const updates=await call('/api/updates');assert.equal(updates.status,200);assert.equal(updates.data.available,true,JSON.stringify(updates.data));assert.equal(updates.data.repository,null);
+  assert.equal((await call('/api/updates',{repository:'fixture/private-copy'},'POST',{'X-CSRF-Token':''})).status,403);
+  assert.equal((await call('/api/updates',{repository:'https://evil.org/fake/repo'})).status,400);
+  assert.equal((await call('/api/updates',{repository:'https://github.com/fixture/private-copy'})).status,200);
   const state=await call('/api/installation');assert.equal(state.status,200,JSON.stringify(state.data));assert.equal(state.data.verifiedAt,null);assert.equal(state.data.school,payload.school);assert.equal(state.data.origin,origin);
   const serialized=JSON.stringify(state.data);for(const secret of ['vault','invite','monitorKey',code,invite])assert.ok(!serialized.includes(secret));
   assert.equal((await call('/api/installation',{action:'school',school:'https://correct-school.de',dav:'https://webdav.school.de'})).status,401);
@@ -86,10 +92,23 @@ test('native personal installation is inert, private, resumable, origin pinned a
   let job:any;for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,30));job=await call('/api/jobs/'+planned.data.id);if(job.data.status==='published'||job.data.status==='failed'||job.data.status==='needs_review')break;}
   assert.equal(job.data.status,'published',JSON.stringify(job.data));assert.equal(moves,1);assert.equal(puts,1);assert.deepEqual(files.get('/Files/Fixture/Test.txt'),bytes);
   assert.ok((await call('/api/installation')).data.verifiedAt);
-  await mf.dispose();mf=new Miniflare(options);
+  const pendingPlan={...plan,key:crypto.randomUUID(),filename:'After-update.txt',numberingConsent:{...plan.numberingConsent,filename:'After-update.txt'}};
+  pendingPlan.namingQuote=(await call('/api/naming-quote',pendingPlan)).data.namingQuote;
+  const pendingJob=await call('/api/jobs',pendingPlan);assert.equal(pendingJob.status,201);
+  assert.equal((await call('/api/jobs/'+pendingJob.data.id+'/file',bytes,'PUT')).data.status,'scheduled');
+  await mf.dispose();
+  for(const w of (options as any).workers)for(const m of Object.values(w.config.manifest.modules)as any[])m.contents=m.contents.replaceAll(beforeVersion,afterVersion);
+  mf=new Miniflare(options);
+  const updated=await call('/api/updates');assert.equal(updated.data.installed,afterVersion);assert.equal(updated.data.available,false);assert.equal(updated.data.repository,'fixture/private-copy');
+  assert.equal((await call('/api/jobs/'+planned.data.id)).data.status,'published');
   const restarted=await call('/api/session');assert.equal(restarted.status,200);assert.equal(restarted.data.user.id,session.data.user.id);
   assert.equal((await call('/api/connection')).data.connected,true);
   assert.ok((await call('/api/installation')).data.verifiedAt);
+  assert.equal((await call('/api/jobs/'+pendingJob.data.id)).data.status,'scheduled');
+  assert.ok((await call('/api/installation')).data.monitor.confirmedAt);
+  const ns2=await mf.getDurableObjectNamespace('PUBLISHERS');await ns2.get(ns2.idFromName(sha256(JSON.stringify([config.SCHOOL_ID,session.data.user.id])))).fetch(origin+'/_fixture/due');
+  let after:any;for(let i=0;i<100;i++){after=await call('/api/jobs/'+pendingJob.data.id);if(after.data.status==='published')break;await new Promise(r=>setTimeout(r,30));}
+  assert.equal(after.data.status,'published',JSON.stringify(after.data));assert.deepEqual(files.get('/Files/Fixture/After-update.txt'),bytes);
   const resumed=await call('/setup/initialize',payload);assert.equal(resumed.data.invitation,first.data.invitation);
  }finally{await mf.dispose();await rm(persist,{recursive:true,force:true});}
 });

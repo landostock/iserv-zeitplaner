@@ -1,6 +1,7 @@
 import {AppError} from './security.ts';
 import type {Env} from './types.ts';
-export const PERSONAL_VERSION='1.0.0-rc1';
+import release from '../personal-release.json';
+export const PERSONAL_VERSION=release.version;
 export interface PersonalSettings {origin:string;school:string;dav:string;id:string;vault:string;monitor:string;invite:string;createdAt:number;vapidPublic:string;vapidPrivate:string;}
 export function publicHttps(value:unknown){
  if(typeof value!=='string'||value.length>250)throw new AppError('invalid_school');

@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0-rc2",
+  "updaterProtocol": 1,
+  "notes": [
+    "Updates in den Einstellungen erkennen und geführt übernehmen.",
+    "Healthchecks.io über die Hauptseite öffnen.",
+    "Überflüssige Dateinameninformationen aus der Ordnerauswahl entfernt."
+  ]
+}

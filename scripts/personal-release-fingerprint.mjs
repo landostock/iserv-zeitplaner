@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 export const PERSONAL_PACKAGE_NAME='iserv-zeitplaner-personal';
 export const RELEASE_HASH_MODE='sha256-project-package-name-v1';
 export const RELEASE_SOURCE_DIRS=['src','web','migrations','scripts','test','browser-tests'];
-export const RELEASE_SOURCE_FILES=['.dev.vars.example','.gitignore','.node-version','package.json','package-lock.json','tsconfig.json','tsconfig.web.json','vite.config.ts','playwright.config.ts','README.md','SECURITY.md','INSTALLATION-CHECKS.md'];
+export const RELEASE_SOURCE_FILES=['personal-release.json','.github/workflows/zeitplaner-update.yml','.dev.vars.example','.gitignore','.node-version','package.json','package-lock.json','tsconfig.json','tsconfig.web.json','vite.config.ts','playwright.config.ts','README.md','SECURITY.md','INSTALLATION-CHECKS.md'];
 
 export function isReleaseSourcePath(file){
  if(typeof file!=='string'||file.includes('\\'))return false;
