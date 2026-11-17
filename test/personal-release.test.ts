@@ -49,3 +49,11 @@ for(const change of ['build script','install hook','dependency','lockfile integr
  await f.write('package.json',f.pkg);
  await assert.rejects(f.verify(),/Release source changed|Unexpected project package name/);
 });
+
+test('release verification rejects local cache and credential paths before reading them',async t=>{
+ const f=await fixture(t),manifest=JSON.parse(await readFile(join(f.dir,'release-manifest.json'),'utf8'));
+ for(const file of ['.wrangler/cache/cf.json','src/.env','src/secrets/token.secret','src/../package.json']){
+  await f.write('release-manifest.json',{...manifest,files:{...manifest.files,[file]:'synthetic'}});
+  await assert.rejects(f.verify(),/Unexpected release artifact/);
+ }
+});
