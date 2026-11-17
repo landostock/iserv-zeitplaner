@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0-rc3",
+  "updaterProtocol": 1,
+  "notes": [
+    "Updates in den Einstellungen anzeigen und die Übernahme im eigenen GitHub-Konto vorbereiten.",
+    "Die installierte Version nach der Veröffentlichung prüfen.",
+    "Healthchecks.io über die Hauptseite und „Sign Up“ einrichten."
+  ],
+  "commit": "ddc2d522316e069e15b9b6cb0ffbc1c3001b14a5"
+}
