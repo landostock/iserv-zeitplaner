@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0-rc3",
-  "updaterProtocol": 1,
+  "version": "1.0.0-rc4",
+  "updaterProtocol": 2,
   "notes": [
     "Updates in den Einstellungen anzeigen und die Übernahme im eigenen GitHub-Konto vorbereiten.",
     "Die installierte Version nach der Veröffentlichung prüfen.",

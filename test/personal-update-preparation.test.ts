@@ -11,9 +11,10 @@ async function fixture(t:any){
  async function make(name:string,version:string){const root=join(dir,name),files:Record<string,string>={};
   async function put(path:string,data:string){await mkdir(dirname(join(root,path)),{recursive:true});await writeFile(join(root,path),data);files[path]=tooling.releaseFileFingerprint(path,Buffer.from(data));}
   for(const d of ['src','web','scripts','migrations','test','browser-tests'])await mkdir(join(root,d),{recursive:true});
-  await put('personal-release.json',JSON.stringify({version,updaterProtocol:1,notes:['Synthetic release']}));
+  await put('personal-release.json',JSON.stringify({version,updaterProtocol:2,notes:['Synthetic release']}));
   await put('package.json',JSON.stringify({name:name==='own'?'eigener-worker':'iserv-zeitplaner-personal'}));
-  await put('src/app.ts',version);await put('migrations/0001.sql','unchanged schema');await put('.github/workflows/zeitplaner-update.yml','unchanged workflow');
+  await put('src/app.ts',version);await put('migrations/0001.sql','unchanged schema');await put('scripts/zeitplaner-update.yml','unchanged workflow');
+  if(name==='own'){await mkdir(join(root,'.github/workflows'),{recursive:true});await writeFile(join(root,'.github/workflows/zeitplaner-update.yml'),'unchanged workflow');}
   await writeFile(join(root,'wrangler.jsonc'),JSON.stringify({name:name==='own'?'eigener-worker':'mein-iserv-zeitplaner',durable_objects:{bindings:[{name:'FIXTURE',class_name:'Fixture'}]},migrations:[{tag:'v1'}]}));
   const manifest=()=>writeFile(join(root,'release-manifest.json'),JSON.stringify({hashMode:tooling.RELEASE_HASH_MODE,files}));await manifest();return{root,put,manifest};
  }
@@ -30,7 +31,7 @@ for(const change of ['custom source','extra source','migration','config','workfl
  if(change==='custom source')await writeFile(join(own.root,'src/app.ts'),'custom');
  if(change==='extra source')await writeFile(join(own.root,'src/custom.ts'),'custom');
  if(change==='migration'){await next.put('migrations/0001.sql','changed schema');await next.manifest();}
- if(change==='workflow'){await next.put('.github/workflows/zeitplaner-update.yml','changed workflow');await next.manifest();}
+ if(change==='workflow'){await next.put('scripts/zeitplaner-update.yml','changed workflow');await next.manifest();}
  if(change==='config')await writeFile(join(next.root,'wrangler.jsonc'),'{"name":"other","migrations":[]}');
  if(change==='path traversal'){const m=JSON.parse(await readFile(join(next.root,'release-manifest.json'),'utf8'));m.files['src/../../secrets.key']='a'.repeat(64);await writeFile(join(next.root,'release-manifest.json'),JSON.stringify(m));}
  await assert.rejects(prepareUpdate(own.root,next.root,change==='downgrade'?'1.0.0-rc1':'1.0.0-rc3'));assert.deepEqual(await readFile(join(own.root,'personal-release.json')),before);

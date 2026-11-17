@@ -2,7 +2,7 @@
 
 Browser-Assistent für eine eigene Installation im eigenen Cloudflare-Konto. iPad, Windows, Linux und macOS benötigen weder Terminal noch lokale Installationsprogramme.
 
-**Stand: 17.11.2026 · 1.0.0-rc3.** Der reale Erstlauf mit neuen GitHub- und Cloudflare-Konten, Passkey, IServ-Verbindung und automatischer Veröffentlichung bei geschlossenem Zeitplaner ist abgeschlossen. Die optionale externe Ausfallüberwachung wurde dabei bewusst übersprungen. Eine Erstinstallation auf einem physischen iPad sowie unter Windows und Linux steht noch aus; automatisierte WebKit-Prüfungen ersetzen diese nicht.
+**Stand: 17.11.2026 · 1.0.0-rc4.** Der reale Erstlauf mit neuen GitHub- und Cloudflare-Konten, Passkey, IServ-Verbindung und automatischer Veröffentlichung bei geschlossenem Zeitplaner ist abgeschlossen. Die optionale externe Ausfallüberwachung wurde dabei bewusst übersprungen. Eine Erstinstallation auf einem physischen iPad sowie unter Windows und Linux steht noch aus; automatisierte WebKit-Prüfungen ersetzen diese nicht.
 
 ## Installation starten
 
@@ -43,11 +43,11 @@ IServ-Instanzen müssen die hier verwendeten WebDAV-Dateibereiche `/Files/` und 
 Unter **Einstellungen / Updates** steht die installierte Version. Beim Anmelden und über **Nach Updates suchen** wird eine öffentliche Versionsliste abgerufen; bei einer neueren Version erscheint **Update verfügbar**. Dabei werden keine Datei-, IServ- oder Kontozugangsdaten an das Quellprojekt übertragen. Ist der Versionsdienst nicht erreichbar, arbeitet die vorhandene Installation weiter.
 
 1. **Update vorbereiten** wählen und einmal den Link zur eigenen privaten GitHub-Kopie eintragen. Der Link steht auch bei Cloudflare im Build unter **Build settings**.
-2. **Update bei GitHub vorbereiten** öffnen. Falls GitHub nachfragt, den Workflow für das eigene Projekt aktivieren. **Run workflow** wählen, die im Zeitplaner angezeigte Version eintragen und mit **Run workflow** bestätigen.
+2. Beim ersten Update **Update-Funktion bei GitHub einrichten** öffnen. Die vorgefüllte Datei über **Commit changes… / Commit changes** auf **main** speichern. Ist sie schon vorhanden, diesen einmaligen Schritt überspringen. Danach **Update bei GitHub vorbereiten** öffnen. Falls GitHub nachfragt, den Workflow für das eigene Projekt aktivieren. **Run workflow** wählen, die im Zeitplaner angezeigte Version eintragen und mit **Run workflow** bestätigen.
 3. Auf den grünen Lauf warten. Im Assistenten **Vorbereitete Änderung öffnen** wählen, Änderungen prüfen und über **Create pull request**, danach **Merge pull request / Confirm merge** übernehmen. Der Workflow selbst veröffentlicht nichts und benötigt keine Cloudflare-Zugangsdaten. Sein kurzlebiger GitHub-Token darf nur in dieser Programmkopie einen Update-Zweig schreiben.
 4. Den erfolgreichen Cloudflare-Build unter **Deployments** abwarten. Im Zeitplaner **Installation prüfen** und nach Bestätigung der neuen Version **Zeitplaner neu laden** wählen.
 
-Der Update-Weg unterstützt die unveränderte persönliche Vorlage ab Version 1.0.0-rc2. Er lädt ausschließlich einen fest benannten Versions-Tag aus dem öffentlichen Quellprojekt, prüft alle Release-Dateien und bricht bei eigenen Quelländerungen, neuen Speicher-Migrationen oder einem geänderten Update-Workflow vor der Übernahme ab. Solche Änderungen benötigen eine gesonderte manuelle Prüfung. Ältere Installationen benötigen einmalig eine manuelle Aktualisierung, die Worker-Konfiguration und Speicherzuordnungen erhält.
+Der Update-Weg unterstützt die unveränderte persönliche Vorlage ab Version 1.0.0-rc4. Er lädt ausschließlich einen fest benannten Versions-Tag aus dem öffentlichen Quellprojekt, prüft alle Release-Dateien und bricht bei eigenen Quelländerungen, neuen Speicher-Migrationen oder einem geänderten Update-Workflow vor der Übernahme ab. Solche Änderungen benötigen eine gesonderte manuelle Prüfung. Ältere Installationen benötigen einmalig eine manuelle Aktualisierung, die Worker-Konfiguration und Speicherzuordnungen erhält.
 
 Sie kontrollieren die geklonte Programmkopie. Änderungen werden erst nach Ihrer Freigabe übernommen. Neue Versionen und Abhängigkeiten vor Übernahme prüfen. Das Release-Manifest erkennt Änderungen an ausgelieferten Quellen; Prüfsummen allein beweisen keine Vertrauenswürdigkeit. Den Worker-Namen beibehalten. Das private Installationsobjekt, vorhandene Speicherobjekte und ihre Schlüssel nicht löschen oder durch neue Migrationen ersetzen. Ein Update ist keine Neuinstallation.
 

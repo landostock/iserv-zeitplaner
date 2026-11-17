@@ -5,7 +5,7 @@ import {dirname,join,resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {isReleaseSourcePath,releaseFileFingerprint,RELEASE_HASH_MODE} from './personal-release-fingerprint.mjs';
 const SOURCE='https://github.com/landostock/iserv-zeitplaner.git';
-const WORKFLOW='.github/workflows/zeitplaner-update.yml';
+const WORKFLOW='.github/workflows/zeitplaner-update.yml',TEMPLATE='scripts/zeitplaner-update.yml';
 const git=(cwd,args)=>execFileSync('git',args,{cwd,encoding:'utf8',maxBuffer:32*1024*1024,stdio:['ignore','pipe','pipe']}).trim();
 const json=async(root,path)=>JSON.parse(await readFile(join(root,path),'utf8'));
 function version(v){if(!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-rc([1-9]\d*))?$/.test(v))throw new Error('Ungültige Versionsnummer.');return v;}
@@ -27,14 +27,15 @@ async function validate(root){
 function deploymentShape(c){const d=structuredClone(c);delete d.name;return JSON.stringify(Object.fromEntries(Object.entries(d).sort(([a],[b])=>a.localeCompare(b))));}
 export async function prepareUpdate(root,source,requested){
  version(requested);const before=await validate(root),next=await validate(source),current=await json(root,'personal-release.json'),release=await json(source,'personal-release.json');
- if(release.version!==requested||release.updaterProtocol!==1||current.updaterProtocol!==1||!newer(version(release.version),version(current.version)))throw new Error('Kein unterstütztes neueres Update.');
+ if(release.version!==requested||release.updaterProtocol!==2||current.updaterProtocol!==2||!newer(version(release.version),version(current.version)))throw new Error('Kein unterstütztes neueres Update.');
  const config=await json(root,'wrangler.jsonc'),newConfig=await json(source,'wrangler.jsonc');
  if(deploymentShape(config)!==deploymentShape(newConfig))throw new Error('Speicher- oder Worker-Konfiguration geändert. Manuelle Prüfung erforderlich.');
- for(const p of [WORKFLOW])if(!before.files[p]||!next.files[p]||before.files[p]!==next.files[p])throw new Error('Der Update-Workflow benötigt eine manuelle Aktualisierung.');
+ const oldWorkflow=before.files[TEMPLATE]||before.files[WORKFLOW],newWorkflow=next.files[TEMPLATE]||next.files[WORKFLOW];
+ if(!oldWorkflow||!newWorkflow||oldWorkflow!==newWorkflow||releaseFileFingerprint(TEMPLATE,await regular(root,WORKFLOW))!==oldWorkflow)throw new Error('Der Update-Workflow benötigt eine manuelle Aktualisierung.');
  for(const p of new Set([...Object.keys(before.files),...Object.keys(next.files)].filter(p=>p.startsWith('migrations/'))))if(before.files[p]!==next.files[p])throw new Error('Speicher-Migration geändert. Manuelle Prüfung erforderlich.');
  // Validate everything before the first mutation. Keep the owner's config and name.
  const projectName=(await json(root,'package.json')).name;
- for(const p of Object.keys(before.files))if(!next.files[p])await rm(join(root,p));
+ for(const p of Object.keys(before.files))if(p!==WORKFLOW&&!next.files[p])await rm(join(root,p));
  for(const p of Object.keys(next.files)){
   if(p===WORKFLOW)continue;
   let bytes=await readFile(join(source,p));if(p==='package.json'){const pkg=JSON.parse(bytes);pkg.name=projectName;bytes=Buffer.from(JSON.stringify(pkg,null,2)+'\n');}
@@ -57,7 +58,7 @@ async function main(){
   const response=await fetch('https://raw.githubusercontent.com/landostock/iserv-zeitplaner/main/release-channel.json',{redirect:'manual',signal:AbortSignal.timeout(10000)});
   if(!response.ok)throw new Error('Die veröffentlichte Versionsliste ist nicht erreichbar.');
   const text=await response.text();if(text.length>12000)throw new Error('Ungültige Versionsliste.');const channel=JSON.parse(text);
-  if(channel.version!==requested||channel.commit!==commit||channel.updaterProtocol!==1)throw new Error('Version und freigegebener Commit stimmen nicht überein. Im Zeitplaner erneut nach Updates suchen.');
+  if(channel.version!==requested||channel.commit!==commit||channel.updaterProtocol!==2)throw new Error('Version und freigegebener Commit stimmen nicht überein. Im Zeitplaner erneut nach Updates suchen.');
   const tree=git(temp,['ls-tree','-r','FETCH_HEAD']);
   const entries=tree.split('\n').map(line=>{const m=/^100644 blob ([a-f0-9]{40})\t(.+)$/.exec(line);if(!m)throw new Error('Unerlaubter Dateityp in Release.');return {sha:m[1],path:m[2]};});
   if(entries.length>2000)throw new Error('Release zu groß.');

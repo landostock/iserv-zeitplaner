@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version aus den Zeitplaner-Einstellungen (zum Beispiel 1.0.0-rc3)'
+        description: 'Version aus den Zeitplaner-Einstellungen (zum Beispiel 1.0.0-rc5)'
         required: true
         type: string
 permissions:

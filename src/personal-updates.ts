@@ -1,7 +1,7 @@
 import release from '../personal-release.json';
 import {readLimited} from './security.ts';
 export const UPDATE_SOURCE='https://raw.githubusercontent.com/landostock/iserv-zeitplaner/main/release-channel.json';
-export const UPDATE_PROTOCOL=1;
+export const UPDATE_PROTOCOL=2;
 export const INSTALLED_VERSION=release.version;
 export type UpdateRelease={version:string;commit:string;updaterProtocol:number;notes:string[]};
 export function versionParts(value:unknown):number[]|null{

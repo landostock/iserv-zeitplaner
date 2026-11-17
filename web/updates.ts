@@ -1,3 +1,4 @@
+import workflowTemplate from '../scripts/zeitplaner-update.yml?raw';
 type Release={version:string;commit:string;updaterProtocol:number;notes:string[]};
 type Status={installed:string;latest:Release|null;available:boolean;compatible:boolean;checked:boolean;repository:string|null};
 export function initUpdatesUI(deps:{api:(path:string,options?:RequestInit)=>Promise<any>;active:()=>boolean}){
@@ -26,6 +27,7 @@ export function initUpdatesUI(deps:{api:(path:string,options?:RequestInit)=>Prom
  function links(){
   if(!state?.repository||!target)return;
   const base='https://github.com/'+state.repository;
+  $<HTMLAnchorElement>('update-workflow-setup').href=base+'/new/main?filename=.github%2Fworkflows%2Fzeitplaner-update.yml&value='+encodeURIComponent(workflowTemplate);
   $<HTMLAnchorElement>('update-workflow').href=base+'/actions/workflows/zeitplaner-update.yml';
   $<HTMLAnchorElement>('update-compare').href=base+'/compare/main...zeitplaner-update/'+target+'?expand=1';
   $('update-provider-steps').hidden=false;
@@ -45,6 +47,6 @@ export function initUpdatesUI(deps:{api:(path:string,options?:RequestInit)=>Prom
  $('update-close').onclick=()=>dialog.close();$('update-verify').onclick=()=>{void check(true);};$('update-reload').onclick=()=>location.reload();
  return {
   refresh(){if(deps.active()){if(!lastCheck)$('updates-panel').hidden=false;void check();}else this.clear();},
-  clear(){generation++;state=null;target=null;lastCheck=0;dialog.close();$('updates-panel').hidden=true;$('update-notes').replaceChildren();$<HTMLInputElement>('update-repository').value='';$('update-provider-steps').hidden=true;for(const id of ['update-workflow','update-compare'])$(id).removeAttribute('href');$('settings-open').textContent='Einstellungen';}
+  clear(){generation++;state=null;target=null;lastCheck=0;dialog.close();$('updates-panel').hidden=true;$('update-notes').replaceChildren();$<HTMLInputElement>('update-repository').value='';$('update-provider-steps').hidden=true;for(const id of ['update-workflow-setup','update-workflow','update-compare'])$(id).removeAttribute('href');$('settings-open').textContent='Einstellungen';}
  };
 }
